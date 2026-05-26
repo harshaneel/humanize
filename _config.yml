@@ -4,6 +4,18 @@ title: humanize
 description: LLM-agnostic skills for static AI text humanization and detection.
 url: "https://harshaneel.github.io"
 baseurl: "/humanize"
+lang: en
+
+# SEO author info
+author: Harshaneel Gokhale
+author_url: "https://github.com/harshaneel"
+# twitter_username: yourhandle   # uncomment when you have one
+
+# Keywords (comma-separated). Largely ignored by Google but used by Bing, DuckDuckGo, and the structured-data block.
+keywords: "AI text humanizer, AI text detector, GPT detector, ChatGPT detector, Claude skills, Codex skills, AI writing detection, humanize AI text, ai-check, LLM skills, static rule-based, peer-reviewed, prompt engineering, anti-AI-detection, RLHF detection"
+
+# Open Graph / Twitter card image. Drop a 1280x640 PNG in the repo root as social-card.png to enable.
+og_image: "/social-card.png"
 
 # Enables Cayman's built-in "View on GitHub" button in the page hero.
 repository: harshaneel/humanize
@@ -26,6 +38,8 @@ google_site_verification: "DVxmoms-RR4bpzJ64iXxI7rQwP8DLjWWI9bOYWeEu4Q"
 markdown: kramdown
 plugins:
   - jekyll-relative-links
+  - jekyll-sitemap
+  - jekyll-seo-tag
 relative_links:
   enabled: true
   collections: true
