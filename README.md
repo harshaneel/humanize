@@ -7,7 +7,7 @@ Works in any LLM agent: Claude Code, Codex CLI, ChatGPT, Gemini, Cursor, Aider, 
 
 <p>
   <a href="https://github.com/harshaneel/humanize"><img alt="View on GitHub" src="https://img.shields.io/badge/View%20on-GitHub-181717?logo=github&logoColor=white"></a>
-  <a href="https://github.com/harshaneel/humanize/stargazers"><img alt="Star this repo" src="https://img.shields.io/github/stars/harshaneel/humanize?logo=github&amp;color=yellow&amp;label=Star"></a>
+  <a href="https://github.com/harshaneel/humanize/stargazers"><img alt="Star this repo" src="https://img.shields.io/github/stars/harshaneel/humanize?logo=github&amp;color=yellow&amp;label=Stars"></a>
   <a href="https://github.com/harshaneel/humanize/fork"><img alt="Fork this repo" src="https://img.shields.io/github/forks/harshaneel/humanize?logo=github&amp;color=blue&amp;label=Fork"></a>
   <a href="https://github.com/harshaneel/humanize/blob/main/LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-4CAF50"></a>
 </p>
