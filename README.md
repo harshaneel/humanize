@@ -582,4 +582,4 @@ Wikipedia: *Signs of AI writing*, maintained by WikiProject AI Cleanup. A contin
 
 *Last updated: May 2026. Research coverage: AAAI 2025, ACL 2024-2025, COLING 2025, NAACL 2024, EACL 2026, NeurIPS 2025, EMNLP 2025, arXiv preprints through April 2026, and the WikiProject AI Cleanup community catalog.*
 
-<meta name="google-site-verification" content="e9ISZm23g75hHlyPBMnqA4zRpqQobRrbbPvlXo2WP90" />
+<meta name="google-site-verification" content="DVxmoms-RR4bpzJ64iXxI7rQwP8DLjWWI9bOYWeEu4Q" />
