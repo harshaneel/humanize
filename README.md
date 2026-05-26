@@ -24,6 +24,17 @@ Both are static rule-based skills (single `SKILL.md` per skill, zero runtime dep
 
 This repo bundles two skills (`humanize` and `ai-check`) in their own subdirectories. Installation copies both into your agent's skills folder.
 
+### Install everywhere in one command
+
+If you use multiple agents (Claude Code, Codex CLI, ChatGPT desktop), install to all three skill directories at once:
+
+```bash
+git clone https://github.com/harshaneel/humanize.git
+cd humanize && ./install.sh all
+```
+
+This installs to `~/.claude/skills/`, `~/.codex/skills/`, and `~/.agents/skills/`. Add `--copy` if you prefer self-contained files over symlinks.
+
 ### Claude Code
 
 Clone the repo, then copy both skill folders into Claude Code's skills directory:
@@ -45,11 +56,23 @@ cd humanize && ./install.sh
 
 ```bash
 git clone https://github.com/harshaneel/humanize.git
+mkdir -p ~/.codex/skills
+cp -R humanize/humanize humanize/ai-check ~/.codex/skills/
+```
+
+Or `cd humanize && ./install.sh codex` to use the install script.
+
+### ChatGPT desktop / OpenAI agents
+
+ChatGPT desktop and several OpenAI agent harnesses read from `~/.agents/skills/`.
+
+```bash
+git clone https://github.com/harshaneel/humanize.git
 mkdir -p ~/.agents/skills
 cp -R humanize/humanize humanize/ai-check ~/.agents/skills/
 ```
 
-Or `cd humanize && ./install.sh codex` to use the install script.
+Or `cd humanize && ./install.sh chatgpt` to use the install script.
 
 ### OpenCode
 
@@ -438,7 +461,7 @@ If you installed via symlink (the default), updates apply immediately. If you us
 ```bash
 rm ~/.claude/skills/humanize ~/.claude/skills/ai-check
 # or for codex
-rm ~/.agents/skills/humanize ~/.agents/skills/ai-check
+rm ~/.codex/skills/humanize ~/.codex/skills/ai-check
 ```
 
 ## Contributing
@@ -558,3 +581,5 @@ Wikipedia: *Signs of AI writing*, maintained by WikiProject AI Cleanup. A contin
 ---
 
 *Last updated: May 2026. Research coverage: AAAI 2025, ACL 2024-2025, COLING 2025, NAACL 2024, EACL 2026, NeurIPS 2025, EMNLP 2025, arXiv preprints through April 2026, and the WikiProject AI Cleanup community catalog.*
+
+<meta name="google-site-verification" content="e9ISZm23g75hHlyPBMnqA4zRpqQobRrbbPvlXo2WP90" />

@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-# Install humanize and ai-check skills for Claude Code or Codex CLI.
+# Install humanize and ai-check skills for any agent that reads from a skills directory.
 #
 # Usage:
-#   ./install.sh                  # installs to Claude Code (~/.claude/skills)
-#   ./install.sh codex            # installs to Codex CLI (~/.agents/skills)
+#   ./install.sh                  # Claude Code     (~/.claude/skills)
+#   ./install.sh codex            # Codex CLI       (~/.codex/skills)
+#   ./install.sh chatgpt          # ChatGPT agents  (~/.agents/skills)
+#   ./install.sh all              # all three of the above
 #   ./install.sh --copy           # copy files instead of symlinking
-#   ./install.sh codex --copy
+#   ./install.sh all --copy       # combinable with any target
 #
 # By default the script symlinks the skill directories so that future `git pull`
 # updates pick up automatically. Use --copy if you prefer self-contained files.
@@ -20,11 +22,13 @@ MODE="symlink"
 
 for arg in "$@"; do
   case "$arg" in
-    claude) TARGET="claude" ;;
-    codex)  TARGET="codex" ;;
-    --copy) MODE="copy" ;;
+    claude)  TARGET="claude" ;;
+    codex)   TARGET="codex" ;;
+    chatgpt) TARGET="chatgpt" ;;
+    all)     TARGET="all" ;;
+    --copy)  MODE="copy" ;;
     -h|--help)
-      sed -n '2,12p' "$0" | sed 's/^# *//'
+      sed -n '2,13p' "$0" | sed 's/^# *//'
       exit 0
       ;;
     *)
@@ -35,36 +39,47 @@ for arg in "$@"; do
   esac
 done
 
+# Resolve target(s) to destination directories
+DESTS=()
 case "$TARGET" in
-  claude) DEST="$HOME/.claude/skills" ;;
-  codex)  DEST="$HOME/.agents/skills" ;;
+  claude)  DESTS=("$HOME/.claude/skills") ;;
+  codex)   DESTS=("$HOME/.codex/skills") ;;
+  chatgpt) DESTS=("$HOME/.agents/skills") ;;
+  all)     DESTS=("$HOME/.claude/skills" "$HOME/.codex/skills" "$HOME/.agents/skills") ;;
 esac
 
-mkdir -p "$DEST"
+install_into() {
+  local dest="$1"
+  mkdir -p "$dest"
+  echo ""
+  echo "Installing skills to $dest (mode: $MODE)"
 
-echo "Installing skills to $DEST (mode: $MODE)"
+  for skill in "${SKILLS[@]}"; do
+    local src="$REPO_DIR/$skill"
+    local dst="$dest/$skill"
 
-for SKILL in "${SKILLS[@]}"; do
-  SRC="$REPO_DIR/$SKILL"
-  DST="$DEST/$SKILL"
+    if [ ! -d "$src" ]; then
+      echo "  SKIP $skill (missing source directory $src)"
+      continue
+    fi
 
-  if [ ! -d "$SRC" ]; then
-    echo "  SKIP $SKILL (missing source directory $SRC)"
-    continue
-  fi
+    if [ -L "$dst" ] || [ -e "$dst" ]; then
+      echo "  removing existing $dst"
+      rm -rf "$dst"
+    fi
 
-  if [ -L "$DST" ] || [ -e "$DST" ]; then
-    echo "  removing existing $DST"
-    rm -rf "$DST"
-  fi
+    if [ "$MODE" = "symlink" ]; then
+      ln -s "$src" "$dst"
+      echo "  symlinked $skill"
+    else
+      cp -R "$src" "$dst"
+      echo "  copied $skill"
+    fi
+  done
+}
 
-  if [ "$MODE" = "symlink" ]; then
-    ln -s "$SRC" "$DST"
-    echo "  symlinked $SKILL"
-  else
-    cp -R "$SRC" "$DST"
-    echo "  copied $SKILL"
-  fi
+for dest in "${DESTS[@]}"; do
+  install_into "$dest"
 done
 
 echo ""
