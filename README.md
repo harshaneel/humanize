@@ -5,6 +5,14 @@ Grounded in 50+ peer-reviewed sources through April 2026.
 
 Works in any LLM agent: Claude Code, Codex CLI, ChatGPT, Gemini, Cursor, Aider, OpenCode, Continue, Copilot. The install paths differ; the skill content is identical.
 
+<p>
+  <a href="https://github.com/harshaneel/humanize"><img alt="View on GitHub" src="https://img.shields.io/badge/View%20on-GitHub-181717?logo=github&logoColor=white"></a>
+  <a href="https://github.com/harshaneel/humanize/stargazers"><img alt="Star this repo" src="https://img.shields.io/github/stars/harshaneel/humanize?logo=github&amp;color=yellow&amp;label=Star"></a>
+  <a href="https://github.com/harshaneel/humanize/fork"><img alt="Fork this repo" src="https://img.shields.io/github/forks/harshaneel/humanize?logo=github&amp;color=blue&amp;label=Fork"></a>
+  <a href="https://github.com/harshaneel/humanize/blob/main/LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-4CAF50"></a>
+  <a href="#install"><img alt="Works with" src="https://img.shields.io/badge/works%20with-Claude%20%7C%20GPT%20%7C%20Gemini%20%7C%20Codex-FF6F61?logo=openai&logoColor=white"></a>
+</p>
+
 ---
 
 ## What's inside
@@ -479,6 +487,17 @@ Before opening a PR, run the regression scenarios in `tests/SCENARIOS.md` manual
 
 MIT. See `LICENSE`.
 
+---
+
+<p align="center">
+  <b>Found this useful?</b><br/>
+  <a href="https://github.com/harshaneel/humanize">⭐ Star the repo on GitHub</a> to help other people find it.
+</p>
+
+<p align="center">
+  <a href="https://github.com/harshaneel/humanize"><img alt="View on GitHub" src="https://img.shields.io/badge/GitHub-harshaneel%2Fhumanize-181717?logo=github&logoColor=white"></a>
+</p>
+
 ## Citation
 
 If this skill informs research or production work, cite as:
@@ -581,5 +600,3 @@ Wikipedia: *Signs of AI writing*, maintained by WikiProject AI Cleanup. A contin
 ---
 
 *Last updated: May 2026. Research coverage: AAAI 2025, ACL 2024-2025, COLING 2025, NAACL 2024, EACL 2026, NeurIPS 2025, EMNLP 2025, arXiv preprints through April 2026, and the WikiProject AI Cleanup community catalog.*
-
-<meta name="google-site-verification" content="DVxmoms-RR4bpzJ64iXxI7rQwP8DLjWWI9bOYWeEu4Q" />

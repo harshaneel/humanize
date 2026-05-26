@@ -1,0 +1,33 @@
+# GitHub Pages Jekyll configuration
+
+title: humanize
+description: Best static AI text humanizer and detector. Two LLM-agnostic skills, no Claude required.
+url: "https://harshaneel.github.io"
+baseurl: "/humanize"
+
+# Enables Cayman's built-in "View on GitHub" button in the page hero.
+repository: harshaneel/humanize
+github:
+  is_project_page: true
+  repository_url: "https://github.com/harshaneel/humanize"
+  repository_name: humanize
+  owner_name: harshaneel
+  owner_url: "https://github.com/harshaneel"
+show_downloads: true
+
+# Theme. Cayman is a common default; switch if you prefer another GitHub Pages theme.
+theme: jekyll-theme-cayman
+
+# Google Search Console verification token.
+# Paste the value from the meta tag Google gave you (just the content="..." value, not the whole tag).
+google_site_verification: "DVxmoms-RR4bpzJ64iXxI7rQwP8DLjWWI9bOYWeEu4Q"
+
+# Render the README as the homepage.
+markdown: kramdown
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: true
+include:
+  - README.md
