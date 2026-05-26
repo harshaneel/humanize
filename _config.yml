@@ -1,7 +1,7 @@
 # GitHub Pages Jekyll configuration
 
 title: humanize
-description: Best static AI text humanizer and detector. Two LLM-agnostic skills, no Claude required.
+description: LLM-agnostic skills for static AI text humanization and detection.
 url: "https://harshaneel.github.io"
 baseurl: "/humanize"
 
