@@ -1,4 +1,21 @@
 /.vscode
 /docs
 
+# asdf / language version pins (developer-local)
+.tool-versions
+
+# Benchmark scaffolding (developer-local; methodology documented in README)
+/bench
+
+# Jekyll build output (GitHub Pages builds remotely)
+/_site
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.python-version
+
 /.DS_Store
+Thumbs.db

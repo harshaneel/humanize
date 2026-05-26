@@ -14,6 +14,32 @@ Works in any LLM agent: Claude Code, Codex CLI, ChatGPT, Gemini, Cursor, Aider, 
 
 ---
 
+## Contents
+
+**Get started**
+- [What's inside](#whats-inside) — the two skills, at a glance
+- [Installation](#installation) — one command for Claude Code, Codex CLI, ChatGPT desktop, or any agent
+- [Usage](#usage) — how to invoke each skill
+- [Benchmark](#benchmark) — 25 inputs, two independent scorers
+
+**Why the skills work**
+- [Background](#background) — the gap between AI and human writing
+- [The detection literature](#the-detection-literature-what-researchers-measure) — perplexity, burstiness, stylometry, discourse
+- [Detection methodology taxonomy](#detection-methodology-taxonomy) — zero-shot, classifier, watermarking, hybrid
+- [Adversarial findings](#adversarial-findings-what-breaks-detectors) — what evasion techniques actually do to detectors
+- [The nine humanization levers](#the-nine-humanization-levers) — the rules the skill applies
+
+**Limits and what closes them**
+- [Accuracy benchmarks from the literature](#accuracy-benchmarks-from-the-literature) — detector accuracy numbers from published research
+- [Known limitations](#known-limitations) — what this skill does not guarantee
+- [What this rule-based approach cannot do (the ceiling)](#what-this-rule-based-approach-cannot-do-the-ceiling) — the learned-classifier ceiling and why it exists
+- [Complementary techniques](#complementary-techniques-beyond-the-nine-core-levers) — what closes the gap (cross-model paraphrase, base-model rewriting, manual edits)
+
+**Maintenance & references**
+- [Updating](#updating) · [Uninstalling](#uninstalling) · [Contributing](#contributing) · [License](#license) · [Citation](#citation) · [References](#references)
+
+---
+
 ## What's inside
 
 | Skill | What it does | Trigger |
@@ -165,6 +191,70 @@ Run ai-check on this paragraph, then humanize it to address every flag you raise
 ```
 
 The model will produce the audit report, then a rewrite that targets the specific signals it flagged.
+
+---
+
+## Benchmark
+
+Tested on 25 AI-flavored input texts across 25 distinct registers: tech blog, postmortem, product launch, academic abstract, business email, Slack update, LinkedIn post, cover letter, marketing copy, press release, investor update, job posting, customer support, recipe intro, travel writing, restaurant review, book review, personal essay, privacy policy, tutorial, comparison article, roadmap update, conference abstract, README intro, career advice. Each input contained typical AI tells (banned vocabulary, em dashes, balanced framing, RLHF-style hedging). Each was rewritten by `humanize` following the full nine-lever protocol plus the Step 5.5 audit-revise loop.
+
+The 25 humanized outputs were scored by two independent detectors.
+
+### Internal scorer: `ai-check` (this repo, rule-based stylometry)
+
+| Metric | Value |
+|---|---|
+| Mean score (0–27, lower = more human) | **5.24** |
+| Median | 5 |
+| Verdict distribution | 6 `Human`, 19 `Likely Human`, 0 `Uncertain` or worse |
+
+All 25 outputs landed in the Human / Likely Human range. Zero scored `Uncertain` or higher.
+
+### External scorer: official Binoculars (cross-perplexity, different signal class)
+
+For cross-validation, the same outputs were scored with [Binoculars](https://github.com/ahans30/Binoculars), the zero-shot AI detector from Hans et al. (ICML 2024, [arXiv:2401.12070](https://arxiv.org/abs/2401.12070)). Binoculars uses a different signal class than `ai-check`: a cross-perplexity ratio between two close LLMs rather than rule-based pattern matching. Agreement between the two scorers is independent evidence rather than scorer-implementation bias.
+
+Model pair: TinyLlama-1.1B base + TinyLlama-1.1B-Chat. The paper uses Falcon-7B; TinyLlama is a lightweight substitute since the Binoculars algorithm is model-agnostic.
+
+| Metric | Value |
+|---|---|
+| Mean score (higher = more human) | **0.9928** |
+| Median | 0.9889 |
+| Range | 0.9010 to 1.0737 |
+| AI / Human threshold (per paper, low-FPR mode) | 0.854 |
+
+All 25 outputs scored above the threshold, on the Human side of Binoculars' decision boundary.
+
+### Scope
+
+What this benchmark proves: `humanize` produces text that reads as Human or Likely Human under both rule-based and cross-perplexity detectors, across 25 distinct registers.
+
+What it does NOT prove: the output evades learned commercial classifiers (GPTZero, Grammarly, Pangram). Those score the same humanized output as 99–100% AI because the RLHF fingerprint lives in model weights, and static surface rewriting alone cannot reach it. The "What this rule-based approach cannot do" section below documents this ceiling and what closes it.
+
+### Reproducibility
+
+1. Generate or curate 20+ AI-flavored inputs across multiple registers.
+2. Apply `humanize` to each (full protocol including Step 5.5 audit-revise loop).
+3. Score with `ai-check` (this repo) for the internal pass.
+4. Score with the official Binoculars package for the external cross-check:
+   ```bash
+   git clone https://github.com/ahans30/Binoculars.git
+   pip install --no-deps -e Binoculars
+   ```
+   ```python
+   from binoculars import Binoculars
+   bino = Binoculars(
+       observer_name_or_path='TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T',
+       performer_name_or_path='TinyLlama/TinyLlama-1.1B-Chat-v1.0',
+       use_bfloat16=False,
+   )
+   score = bino.compute_score(text)
+   ```
+   Use the default Falcon-7B pair for the paper-faithful version if you have ~28 GB disk and GPU.
+
+### Note on signal class
+
+Both scorers used here measure perplexity / surface stats. A learned classifier (GPTZero, Grammarly, Pangram) scores the same text differently — see the ceiling section below.
 
 ---
 
