@@ -48,7 +48,7 @@ Flags:
 - Hedged assertions that swap specificity for safety ("can often lead to", "may result in", "tends to")
 - Any of the canonical AI vocabulary list:
   delve, leverage (verb), utilize, robust, comprehensive, streamline, foster, facilitate,
-  pivotal, nuanced, notable, notably, it is worth noting, it is important to note,
+  pivotal, nuanced, notable, notably, enduring, garner, it is worth noting, it is important to note,
   multifaceted, in the realm of, the landscape of, a myriad of, a plethora of
 
 Cite the exact word or phrase that fired.

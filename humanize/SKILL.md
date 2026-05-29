@@ -34,6 +34,24 @@ of them, not just one or two.
 | **POS density** | High adjective/auxiliary verb density; subordinating conjunctions everywhere | More nouns and verbs doing the heavy lifting; adjectives earned, not decorative |
 | **Punctuation fingerprint** | Em dashes to inject drama, semicolons to link clauses, colons mid-sentence to introduce — all overused | Periods do the work. Em dashes rare and deliberate. Semicolons almost never. Colons mainly for lists at end of sentence. |
 
+### Lever ↔ signal map
+
+The levers in the next section are the write-side counterparts of the signals `ai-check` grades on (A–I). Apply a lever, lower the matching signal:
+
+| Lever | Targets `ai-check` signal |
+|---|---|
+| 1 Perplexity injection | A Perplexity |
+| 2 Burstiness injection | B Burstiness |
+| 3 Hedge surgery | C Hedge density |
+| 4 Structural flattening | D Structural tells |
+| 5 Specificity insertion | E Specificity |
+| 6 Voice and register | H Voice / register |
+| 7 Discourse coherence | F Transitions |
+| 8 Punctuation normalization | G Punctuation |
+| 9 Strip RLHF voice | I Rhetorical scaffolding (RLHF subset) |
+
+Lever 9 covers only the RLHF slice of Signal I; the full rhetorical-scaffolding catalog is enforced by the audit pass (step 5.5), not by any single lever.
+
 ---
 
 ## Nine humanization levers, apply all of them
@@ -375,34 +393,20 @@ When given text to humanize:
    Scan the draft for each item and fix any hit before moving on:
    - [ ] **Em dash count.** Search for "—". More than (word_count / 300) instances? Cut or replace with periods.
    - [ ] **Semicolons.** Search for ";". Any present? Replace with a period or "and"/"but"/"so" unless it's a comma-containing list.
-   - [ ] **Banned vocabulary.** Search for: delve, leverage (verb), utilize, robust, comprehensive, streamline, foster, facilitate, pivotal, "it is important to note", "it is worth noting", "in today's", furthermore, moreover, "it is clear that". Any hits? Rewrite.
+   - [ ] **Banned vocabulary.** Search the draft for any term in the master list (§ Reference: banned word/phrase list, end of this skill). Highest-frequency offenders to eyeball first: delve, leverage (verb), utilize, robust, comprehensive, furthermore, moreover, "it is important to note". Any hits? Rewrite.
    - [ ] **Comparative framing.** Search for "more ... than" and "feels like ... not". Any match? Describe the thing directly instead.
    - [ ] **Diminishment.** Search for "not just", "not X, it's", "not X but". Any match? State what it IS without the negation prefix.
 
-5. **Self-check before output:**
+5. **Self-check before output.** Step 4 already cleared em dashes, semicolons, banned vocabulary (incl. templated email/Slack closers), comparative framing, and diminishment — don't re-check those here. This pass covers what the gate doesn't:
    - [ ] No three consecutive sentences within 5 words of the same length
    - [ ] At least one sentence ≤ 6 words per 150 words of output
-   - [ ] Zero instances of: "delve", "leverage" (as a verb), "robust", "it is worth noting", "it is important to", "in today's", "furthermore", "moreover", "it is clear that"
    - [ ] Every paragraph has at least one specific anchor (number, name, example, time reference)
    - [ ] No bullet lists unless the user specifically requested them
    - [ ] Voice is consistent throughout (don't switch from third-person formal to first-person casual mid-piece)
-   - [ ] Em dash count: ≤ 1 per 300 words; zero double em dash wrapping (— like this —); zero list-joiner em dashes (not X — and Y)
-   - [ ] Semicolon count: 0 unless register is formally academic or it is a list of comma-containing items
    - [ ] Every colon is preceded by a complete sentence, not a mid-clause fragment (exception: Slack/informal fragments are fine)
-   - [ ] No "more like X than Y" or "more X than Y" comparative structures — describe X directly
-   - [ ] No "not just X", "not X, it's Y", "not X but Y" diminishment — say what it IS
-   - [ ] No setup sentences in the form "What [verb phrase] was [the revelation]" with or without a colon. Full family: "What I didn't expect was...", "What surprised me was...", "What it didn't have was...", "What ended up working was...", "What changed everything was...", "What finally clicked was...", "What made the difference was..." All are announcement sentences even without a colon.
-   - [ ] No within-sentence anaphoric parallel list: "what X, what Y, why Z, what W" — four parallel question-word items inside a single sentence. Use varied noun forms instead: "context, the problem, what changed" not "what the context was, what the problem was, why it mattered, what changed"
-   - [ ] No composed self-aware parenthetical: "which I choose to read as X", "which I take as a sign of Y", "which I'm choosing to interpret as Z" — meta-commentary on one's own state. End with the concrete behavior, not the interpretation of it.
-   - [ ] No parallel reason chains: three consecutive "subject + because/when + reason" sentences even when the subjects differ. Vary clause structure across the chain.
-   - [ ] Closing sentence is NOT a standalone aphorism — ends with specific detail, unresolved question, or concrete next action
-   - [ ] No anaphora: check that no sentence-starting word repeats at the opening of 2+ consecutive sentences
-   - [ ] No "turns out" or "it turns out that" as a pivot/reveal
-   - [ ] No "either X or Y" or "between X and Y" binary framing — name the actual situation
-   - [ ] No balanced parenthetical pairs — "(X, but Y) or (A, but B)" symmetric trade-offs
-   - [ ] No templated email/Slack closers: "Happy to jump on a call", "Let me know if you have any questions", "Feel free to reach out"
+   - [ ] **Rhetorical scaffolding:** scan for the structural patterns catalogued in the Signal I checklist (step 5.5) — they survive the gate because they feel like good writing. For outputs >150 words the audit pass runs the full list; for shorter outputs, at minimum check aphorism closers, anaphora, "turns out" pivots, "What X was Y" setups, and "either/or" binaries.
 
-5.5. **Audit-revise loop (required for outputs >150 words).** After the self-check passes, ask yourself explicitly: *"What still makes this read as AI?"* List 2 to 3 residual patterns. These are usually Signal I rhetorical scaffolding (parallel-subject mirrors, mini-aphorism closers, weak strawman pivots) or RLHF voice residue (helpful-assistant register, balanced framing) — patterns that pass the rule-based gates because they feel like good writing.
+5.5. **Audit pass.** Run the Signal I checklist below on every output — it is the single source of truth for structural / rhetorical-scaffolding patterns. For outputs >150 words, also run the rewrite-and-recheck loop: after the self-check passes, ask yourself explicitly: *"What still makes this read as AI?"* List 2 to 3 residual patterns. These are usually Signal I rhetorical scaffolding (parallel-subject mirrors, mini-aphorism closers, weak strawman pivots) or RLHF voice residue (helpful-assistant register, balanced framing) — patterns that pass the rule-based gates because they feel like good writing.
 
    Then rewrite those specific sentences to address them. Re-run the pre-output gate and self-check on the revised version.
 
@@ -425,6 +429,12 @@ When given text to humanize:
    - [ ] **Pattern announcement.** Any sentence that names a pattern before describing it? "The pattern is X.", "What kept showing up was Y." Fix: just describe the pattern.
    - [ ] **"Turns out" / "it turns out that" pivot.** Any reveal-narrative framing? Fix: state the discovery directly.
    - [ ] **Setup sentences ("What X was Y").** "What I didn't expect was X.", "What changed everything was Y." Fix: lead with X or Y directly.
+   - [ ] **Within-sentence anaphoric parallel list.** Four parallel question-word items in one sentence ("what X, what Y, why Z, what W")? Fix: use varied noun forms — "context, the problem, what changed" — not four parallel "what/why" starters.
+   - [ ] **Composed self-aware parenthetical.** Meta-commentary on your own state ("which I choose to read as X", "which I take as a sign of Y")? Fix: end on the concrete behavior, not your interpretation of it.
+   - [ ] **Parallel reason chains.** Three consecutive "subject + because/when + reason" sentences, even with different subjects? Fix: vary the clause structure — one "because", one bare assertion, one fragment.
+   - [ ] **Anaphora.** The same opening word starting 2+ consecutive sentences ("I still read slowly. I still lose the thread.")? Fix: collapse or vary the opener.
+   - [ ] **"Either X or Y" / "between X and Y" binary.** A clean two-option framing where the real situation is a spectrum? Fix: name the actual situation without the binary.
+   - [ ] **Balanced parenthetical pairs.** Symmetric trade-offs in one sentence — "(X, but Y) or (A, but B)"? Fix: real trade-offs are asymmetric; break the symmetry or drop one.
 
    Run this checklist on every paragraph. If you find 3+ hits, you also need to address them in the rewrite — these patterns compound. Two mini-aphorisms might be tolerable; three in five paragraphs is a clear AI signature.
 
@@ -517,7 +527,7 @@ Remove every instance of these before outputting:
 
 **Core AI vocabulary:**
 delve, leverage (verb), utilize, robust, comprehensive, streamline, foster, facilitate,
-pivotal, crucial (overused), enduring, garner, valuable, vibrant, tapestry (figurative),
+pivotal, nuanced, multifaceted, crucial (overused), enduring, garner, valuable, vibrant, tapestry (figurative),
 testament (figurative), interplay, intricate, intricacies, landscape (as abstract noun),
 showcase (verb), highlight (as standalone verb), underscore (as standalone verb),
 align with, actually (as filler), additionally (as opener)
