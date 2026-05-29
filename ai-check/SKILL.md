@@ -207,7 +207,7 @@ good writing. Grammarly and live detectors flag these even when punctuation and 
 are clean.
 
 **Local coherence over-smooth** (severity: moderate-strong, corpus-dependent)
-A pattern identified in recent research (JAIR 2025, arXiv 2509.18880, arXiv 2604.25860):
+A pattern related to findings in recent research (DivEye, arXiv 2509.18880, TMLR 2026):
 every sentence connects too perfectly to the next, zero friction, zero cognitive-load
 artifacts. AI text often has no sentences that slightly misfire, no thoughts that shift
 direction mid-clause, no paragraph that doesn't close cleanly.
@@ -220,8 +220,8 @@ Symptoms:
 - No abrupt topic shift within a paragraph
 - No sentence that slightly misfires before correcting
 
-**Calibration caveat (important).** EACL 2026 SHAP analysis (arXiv 2601.07974) found that
-detectors which fire on over-smoothness rely on dataset-specific stylistic cues, not stable
+**Calibration caveat (important).** SHAP-based explainability analysis (arXiv 2603.23146) found that
+AI-text detectors rely on dataset-specific stylistic cues, not stable
 machine-authorship signals. Treat over-smoothness as a corpus-conditional indicator, not a
 universal authorship invariant. If the text is from a register that genuinely rewards tight
 coherence (academic abstracts, legal briefs, polished marketing copy), down-weight this signal.
@@ -475,18 +475,18 @@ RECOMMENDED FIXES
   hedging, structured enumeration, perfect coherence, "helpful assistant" register), not "AI-ness" per
   se. If the text plausibly came from a base model or a minimally-fine-tuned paraphraser (HIP-style
   attack), cap confidence at Medium even when surface signals look clean.
-- **Claude blind spot in zero-shot detectors.** arXiv 2510.20810 documents that Binoculars and several
-  cross-perplexity detectors achieve only ~55% AUROC on Claude vs ~88% on other models. If the source
+- **Claude blind spot in zero-shot detectors.** The DetectRL benchmark (arXiv 2410.23746) documents that Binoculars
+  achieves only ~55% AUROC on Claude-generated text vs ~88% on GPT-3.5. If the source
   model is plausibly Claude, treat low scores with extra caution.
 - **Iteratively-paraphrased text is a ceiling.** PADBen (arXiv 2511.00416) shows detectors >90% on
   direct AI text fail catastrophically on text that has been iteratively paraphrased through one or
   more LLMs. If the user mentions the text was paraphrased or rewritten, down-weight all signals.
-- **Stylistic cues are corpus-conditional.** EACL 2026 SHAP analysis (arXiv 2601.07974) shows that
+- **Stylistic cues are corpus-conditional.** SHAP-based explainability analysis (arXiv 2603.23146) shows that
   surface stylistic features detectors rely on are dataset-specific, not stable authorship signals.
   This applies most strongly to Signal I (rhetorical scaffolding). Do not over-anchor on any single
   signal; require corroboration across categories.
-- **Multilingual text needs language-matched calibration.** Detectors trained on English do not transfer
-  cleanly to other languages (arXiv 2510.20610 on Arabic). Refuse High confidence on non-English text
+- **Multilingual text needs language-matched calibration.** AI detectors badly misclassify non-English text — they wrongly flag lightly-polished
+  human Arabic as AI, with one commercial detector dropping from 92% to 12% accuracy (arXiv 2511.16690). Refuse High confidence on non-English text
   unless calibration is known.
 
 ### Reference detector landscape (for context)
