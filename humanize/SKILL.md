@@ -135,7 +135,7 @@ Convert AI prose patterns to human prose patterns:
 | Mini-aphorism paragraph closer | "That's the part that stuck." / "That's what changed." / "That's the whole thing." — 4–7 word fragment used to close a paragraph with a punchy lesson. AI appends these to tell the reader what to conclude. Delete it and let the evidence land. |
 | Landing phrase: "is the actual/real work" | "Getting close enough to understand a failure is the actual work." AI's formulaic way to deliver a conclusion. State the conclusion directly without the landing phrase. |
 | Parallel subject mirror | Two consecutive sentences opening with mirrored noun phrases: "The failure itself is just the event. Understanding it is separate." AI constructs these as closing pairs. Break the mirror: vary the subject of one sentence. |
-| Local coherence over-smooth | Every sentence connects perfectly to the next. Zero friction, zero cognitive-load artifacts. Per the 2025 detection literature (JAIR 2025, arXiv 2509.18880), this is the primary AI signal that survives surface rewriting. Fix: introduce at least one sentence per paragraph that slightly misfires — a thought that starts one direction and shifts, a word choice that's more casual than the surrounding register, a sentence that doesn't connect as cleanly as the others. |
+| Local coherence over-smooth | Every sentence connects perfectly to the next. Zero friction, zero cognitive-load artifacts. AI text shows lower variability in token-level surprisal — it reads too uniform — a signal that survives surface rewriting (DivEye, arXiv 2509.18880, TMLR 2026). Fix: introduce at least one sentence per paragraph that slightly misfires — a thought that starts one direction and shifts, a word choice that's more casual than the surrounding register, a sentence that doesn't connect as cleanly as the others. |
 | "Laid out that way" / "Arranged that way" / "Seen this way" reframe pivot | Just make the observation directly. |
 | "X is the easy/hard part" | Start with the challenge itself. |
 | Tricolon parallel structure | Three beats, identical grammar. Break symmetry or reduce to two. |
@@ -286,7 +286,7 @@ average TPR reduction across 8 detectors).
 
 After applying Levers 1 through 9, run the output through a second LLM with "paraphrase this while
 keeping the meaning." Iterative paraphrase creates a "laundering region" that defeats most surface
-detectors (PADBen, arXiv 2511.00416; PIFE, arXiv 2510.02319). Diminishing returns past 2 passes.
+detectors (PADBen, arXiv 2511.00416). Diminishing returns past 2 passes.
 Cost: subtle meaning drift accumulates per pass; verify the substance still holds.
 
 ### Advanced 3: Writer-profile distillation pre-step
