@@ -45,3 +45,17 @@ relative_links:
   collections: true
 include:
   - README.md
+
+# Give README.md a single canonical URL (the root) so Jekyll doesn't also
+# serve it at /README.html, which would create a duplicate-content URL.
+defaults:
+  - scope:
+      path: "README.md"
+    values:
+      permalink: /
+
+# Keep test fixtures out of the search index and sitemap.
+exclude:
+  - tests/
+  - bench/
+  - "*.tool-versions"
