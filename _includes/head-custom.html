@@ -39,17 +39,63 @@
 {
   "@context": "https://schema.org",
   "@type": "SoftwareSourceCode",
-  "name": "{{ site.title }}",
+  "name": "humanize",
+  "alternateName": ["humanize ai skill", "ai text humanizer", "claude humanize skill", "ai-check"],
   "description": "{{ site.description }}",
   "codeRepository": "https://github.com/{{ site.repository }}",
   "programmingLanguage": "Markdown",
+  "runtimePlatform": ["Claude Code", "Codex CLI", "ChatGPT", "Gemini", "Cursor", "Aider"],
   "url": "{{ site.url }}{{ site.baseurl }}",
   "license": "https://opensource.org/licenses/MIT",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Cross-platform",
   {% if site.author %}"author": {
     "@type": "Person",
     "name": "{{ site.author }}"{% if site.author_url %},
     "url": "{{ site.author_url }}"{% endif %}
   },{% endif %}
   "keywords": "{{ site.keywords }}"
+}
+</script>
+
+<!-- FAQ structured data (Google's FAQ rich results) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is a humanize skill?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A humanize skill is a set of rules an LLM agent follows to rewrite AI-generated text so it reads as if a person wrote it. This repo provides humanize (the rewriter) and ai-check (a forensic AI-detection scorer), both as static rule-based skills derived from 50+ peer-reviewed AI-text-detection papers."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I install a humanize skill in Claude Code, Codex CLI, or ChatGPT?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Clone the repo and run ./install.sh all to install to all three agent skills directories. Or pick a single target: ./install.sh claude, ./install.sh codex, ./install.sh chatgpt. For Claude Desktop or web chat agents, upload the SKILL.md files through Settings or paste them as a system prompt."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this humanize skill beat GPTZero or Grammarly?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Static rule-based humanization defeats perplexity-based detectors but not learned classifiers like GPTZero, Grammarly, or Pangram. The README documents what closes that gap: cross-model paraphrase, base-model rewriting, and manual edits."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between humanize and ai-check?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "humanize rewrites AI text to read as human. ai-check does the reverse: it takes any text and produces a forensic AI-detection report with nine signal categories, evidence-quoted flags, a verdict, confidence level, and AI-edited-fraction estimate."
+      }
+    }
+  ]
 }
 </script>
