@@ -1,7 +1,7 @@
 # GitHub Pages Jekyll configuration
 
-title: humanize
-description: LLM-agnostic skills for static AI text humanization and detection.
+title: "humanize — AI text humanizer skill for Claude, ChatGPT, Codex, Gemini"
+description: "LLM-agnostic skills for static AI text humanization and detection. Drop-in humanize and ai-check skills for Claude Code, Codex CLI, ChatGPT, and any LLM agent. Grounded in 50+ peer-reviewed papers."
 url: "https://harshaneel.github.io"
 baseurl: "/humanize"
 lang: en
@@ -45,3 +45,17 @@ relative_links:
   collections: true
 include:
   - README.md
+
+# Give README.md a single canonical URL (the root) so Jekyll doesn't also
+# serve it at /README.html, which would create a duplicate-content URL.
+defaults:
+  - scope:
+      path: "README.md"
+    values:
+      permalink: /
+
+# Keep test fixtures out of the search index and sitemap.
+exclude:
+  - tests/
+  - bench/
+  - "*.tool-versions"

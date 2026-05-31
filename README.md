@@ -258,6 +258,34 @@ Both scorers used here measure perplexity / surface stats. A learned classifier 
 
 ---
 
+## FAQ
+
+### What is a humanize skill?
+
+A humanize skill is a set of rules an LLM agent (Claude, ChatGPT, Codex, Gemini) follows to rewrite AI-generated text so it reads as if a person wrote it. This repo provides two such skills: `humanize` (the rewriter) and `ai-check` (a forensic scorer that flags AI tells). Both are static rule-based skills, packaged as single `SKILL.md` files with zero runtime dependencies, derived from 50+ peer-reviewed AI-text-detection papers from 2024-2026.
+
+### What's the best static AI text humanizer for Claude Code?
+
+This repo's `humanize` skill is designed for Claude Code and works in any LLM agent. It applies nine humanization levers from the published detection literature (perplexity injection, burstiness enforcement, hedge surgery, structural flattening, specificity insertion, voice and register, AI-transition removal, punctuation normalization, RLHF voice strip) plus an audit-revise loop that catches residual AI patterns. Installation is one command: `git clone https://github.com/harshaneel/humanize.git && cd humanize && ./install.sh all`.
+
+### How do I install a humanizer skill in Claude Code, Codex CLI, or ChatGPT?
+
+Clone the repo and run `./install.sh all` to install to all three agent skills directories (`~/.claude/skills/`, `~/.codex/skills/`, `~/.agents/skills/`). Or pick a single target: `./install.sh claude`, `./install.sh codex`, `./install.sh chatgpt`. For Claude Desktop or any web chat agent, upload the `SKILL.md` files through Settings → Skills, or paste them into the conversation as a system prompt.
+
+### Does this humanize skill beat GPTZero or Grammarly's AI detector?
+
+No, and the README is explicit about this. Static rule-based humanization defeats perplexity-based detectors (ZeroGPT, QuillBot, official Binoculars). It does NOT defeat learned classifiers like GPTZero, Grammarly, or Pangram because they detect the RLHF / instruction-tuning fingerprint encoded in the model's weights, which surface rewriting alone cannot reach. To close that gap, the README documents three additional techniques: cross-model paraphrase chains, base-model paraphrase, and manual edits with deliberate human artifacts.
+
+### What's the difference between `humanize` and `ai-check`?
+
+`humanize` rewrites AI text to read as human. `ai-check` does the reverse: it takes any text and produces a forensic AI-detection report with nine scored signal categories, evidence-quoted flags for every fired pattern, a verdict (Human / Likely Human / Uncertain / Likely AI / AI), confidence level, and an AI-edited-fraction estimate (Pure human / Lightly AI-assisted / Mixed authorship / Heavily AI-edited / Pure AI). The two skills share research grounding but serve opposite use cases — `humanize` for writing, `ai-check` for reviewing.
+
+### Is there an open-source alternative to Undetectable.ai, QuillBot Humanizer, or StealthGPT?
+
+This repo's `humanize` skill is an open-source MIT-licensed alternative. It runs entirely within your existing LLM agent (no separate paid service, no API keys, no rate limits, no data sent to third-party servers). The tradeoff: it's rule-based rather than ML-trained, so it's competitive against open-source perplexity-based detectors but not against learned commercial classifiers like Pangram or GPTZero. The README's "What this rule-based approach cannot do" section documents this honestly.
+
+---
+
 ## Background
 
 Telling AI text from human text used to be easy. Not anymore.
