@@ -61,12 +61,20 @@ This repo bundles two skills (`humanize` and `ai-check`) in their own subdirecto
 
 If you use multiple agents (Claude Code, Codex CLI, ChatGPT desktop), install to all three skill directories at once:
 
+**Linux / macOS (Bash):**
 ```bash
 git clone https://github.com/harshaneel/humanize.git
 cd humanize && ./install.sh all
 ```
 
-This installs to `~/.claude/skills/`, `~/.codex/skills/`, and `~/.agents/skills/`. Add `--copy` if you prefer self-contained files over symlinks.
+**Windows (PowerShell):**
+```powershell
+git clone https://github.com/harshaneel/humanize.git
+cd humanize; .\install.ps1 all
+```
+
+This installs to `~/.claude/skills/`, `~/.codex/skills/`, and `~/.agents/skills/`. Add `--copy` (Bash) or `-Copy` (PowerShell) if you prefer self-contained files over symlinks/junctions.
+
 
 ### Claude Code
 
