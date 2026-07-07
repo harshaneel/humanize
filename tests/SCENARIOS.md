@@ -4,6 +4,10 @@ Regression fixtures for the `humanize` and `ai-check` skills. To verify either s
 
 Methodology: writing-skills TDD (RED baseline, then GREEN with skill).
 
+Size budget: `humanize/SKILL.md` stays under ~5,500 words (`wc -w`). Research citations and
+rationale belong in `humanize/references/research.md`, not inline; new patterns should extend
+the Signal I checklist (single source of truth) rather than duplicating it in a lever.
+
 Coverage matrix:
 
 | # | Skill | What it exercises |
@@ -44,6 +48,7 @@ In today's fast-paced world, it is important to note that artificial intelligenc
 - No "not X, it's Y" diminishment
 - No preamble ("Here is the humanized version:")
 - No bullet lists in output
+- Input has zero factual anchors, so per protocol step 2 the output MUST be a rewrite followed by the bracketed no-anchors meta-note (blank line separated). A refusal or options-menu instead of a rewrite is a FAIL.
 
 **Known weakness:** the bait paragraph is so obvious that baseline Claude also passes the basic checks. Real value of the skill shows on subtler tells (scenarios 4, 8, 10).
 
