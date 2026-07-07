@@ -25,17 +25,21 @@ contains em dashes even when you don't remember writing them. Treat "my draft is
 clean" as false by default.
 
 1. **Em dashes:** at most one per 300 words of output. Under 300 words, zero.
-2. **Semicolons:** none, unless a list item itself contains commas.
-3. **Straight quotes and apostrophes only.** Never curly.
+2. **Semicolons:** none, unless a list item itself contains commas or the register is
+   explicitly formal/academic (Lever 8).
+3. **Straight quotes and apostrophes only.** Never curly. Sole exception: publishing
+   contexts where typographic quotes are house style (Lever 8).
 4. **Banned vocabulary** (full list at end of this skill). Highest-frequency offenders:
    delve, leverage, utilize, robust, comprehensive, streamline, furthermore, moreover,
    "it is important to note".
-5. **No negation framing:** "not just X", "not X, it's Y", "more X than Y", "either X or Y".
-   Say what the thing IS. Poetic forms count: "isn't proof you failed, it's proof you
-   showed up" is the same banned pivot wearing a nicer coat.
+5. **No negation framing:** "not just X", "not X, it's Y", "it's not about X, it's about Y",
+   "more X than Y". Say what the thing IS. Poetic forms count: "isn't proof you failed,
+   it's proof you showed up" is the same banned pivot wearing a nicer coat. (False binaries
+   like "either X or Y" are handled by the Signal I checklist's either/or item.)
 6. **Output shape:** the rewritten text only. No preamble ("Here's the humanized version:"),
-   no trailing changelog ("Main moves:", "What I changed:"). If the user wants the diff
-   explained, they'll ask.
+   no trailing changelog ("Main moves:", "What I changed:"). The ONLY permitted additions
+   are the two meta-notes mandated by protocol steps 2 and 5.6, appended after the rewrite.
+   If the user wants the diff explained, they'll ask.
 7. **Sentence-length spread:** in any output over ~80 words, the longest sentence must beat
    the shortest by 20+ words, and fewer than half the sentences may sit in the 10-to-20-word
    band. Your uncorrected rhythm clusters at 10-20 words with ~6 words of deviation; that
@@ -133,15 +137,17 @@ one-word meaning gets the one word):
 | For the purpose of | To / For |
 | With regard to / With respect to | About / On |
 | Prior to / Subsequent to | Before / After |
+| In light of the fact that / Despite the fact that | Since / Although |
 | In the process of / The fact that | (drop entirely; rephrase) |
 
 ### Lever 4: Structural flattening
 
-**Rhetorical scaffolding patterns** (negation pivots, either/or binaries, chiasmus, balanced
-parenthetical pairs, anaphora, "turns out" pivots, thesis-first openers, mini-aphorism closers,
-tricolons, parallel-subject mirrors, "X is the easy/hard part") are catalogued ONCE in the
-Signal I checklist (step 5.5). Apply that checklist at write time too. This table covers only
-what the checklist doesn't:
+**Rhetorical scaffolding patterns** (either/or binaries, chiasmus, tricolons, balanced
+parenthetical pairs, anaphora, "turns out" pivots, thesis-first openers incl. "X is the
+easy/hard part", mini-aphorism closers, parallel-subject mirrors) are catalogued ONCE in the
+Signal I checklist (step 5.5); negation pivots live in hard rule 5 and the step-4
+diminishment scan. Apply the checklist at write time too. This table covers only what the
+checklist doesn't:
 
 | AI pattern | Human replacement |
 |---|---|
@@ -193,7 +199,7 @@ Human writing carries the writer's perspective:
 ### Lever 8: Punctuation normalization
 
 **Em dashes (—).** The most reliable single AI tell; AI uses them at 3–5× the human rate.
-- Maximum one per 300 words
+- Maximum one per 300 words; under 300 words, zero (hard rule 1)
 - Only when a parenthetical genuinely interrupts rather than extends — not as a fancier comma
 - Most uses replace cleanly with a period, a comma, or cutting the aside
 - Never "X — like this — Y" (double em dash wrapping a clause); that pattern is almost exclusively AI
@@ -211,7 +217,7 @@ Human writing carries the writer's perspective:
 - One colon per paragraph maximum in non-list prose
 
 **Curly quotes.** A near-certain single-character tell that survives rewriting.
-- Find-replace before shipping: `"` `"` → `"`, `'` `'` → `'` — apostrophes included
+- Find-replace before shipping: curly `“` `”` → straight `"`, curly `‘` `’` → straight `'` — apostrophes included
 - Exception: publishing contexts where typographic quotes are house style
 
 ### Lever 9: Strip RLHF / instruction-tuning voice
@@ -319,7 +325,7 @@ When given text to humanize:
 
    - [ ] **Em dashes.** Scan for "—", write the count. More than (word_count / 300)? Cut or replace with periods.
    - [ ] **Semicolons.** Scan for ";", write the count. Replace with a period or "and"/"but"/"so" unless a comma-containing list.
-   - [ ] **Curly quotes/apostrophes.** Scan for " " ' ', write the count. Replace with straight equivalents.
+   - [ ] **Curly quotes/apostrophes.** Scan for the curly characters “ ” ‘ ’, write the count. Replace with straight " and '.
    - [ ] **Banned vocabulary.** Scan against the master list (end of this skill), quote each hit. Eyeball first: delve, leverage (verb), utilize, robust, comprehensive, furthermore, moreover, "it is important to note".
    - [ ] **Comparative framing.** Scan for "more ... than" and "feels like ... not", quote each match. Describe the thing directly.
    - [ ] **Diminishment.** Scan for "not just", "not X, it's", "not X but", quote each match. State what it IS.
@@ -330,7 +336,8 @@ When given text to humanize:
 5. **Self-check.** Step 4 cleared the mechanical tells; this covers the rest:
    - [ ] **Sentence rhythm, from counts, not feel.** Write out every sentence's word count in
      order ("9, 5, 22, 16, 7..."), then check the list against ALL four, fixing and recounting
-     until every one passes (hard rule 7 covers the first two):
+     until every one passes (hard rule 7 covers the first two; conditions 1-2 apply only to
+     outputs over ~80 words):
      1. Max minus min ≥ 20 (needs a ≤5-word fragment and a 25-plus-word sentence)
      2. Fewer than half the counts in the 10-to-20 band
      3. No three consecutive counts within 5 words of each other
@@ -338,10 +345,11 @@ When given text to humanize:
      A mental read-through always sounds varied to the model that wrote it; the number list
      doesn't lie. Standard fixes: split one mid-length sentence into a fragment plus the
      remainder, and merge two mid-length neighbors into one long sentence that earns it.
-   - [ ] Every paragraph has at least one specific anchor (number, name, example, time reference)
+   - [ ] Every paragraph has at least one specific anchor (number, name, example, time reference). On the step-2 zero-anchor path, Lever 5's plausible-specificity frames satisfy this item — never invent facts to pass it.
    - [ ] No bullet lists unless the user requested them
    - [ ] Voice consistent throughout (no third-person formal → first-person casual drift)
    - [ ] Every colon preceded by a complete sentence (exception: Slack/informal fragments)
+   - [ ] **Output shape (hard rule 6).** No preamble, no trailing changelog. Only permitted additions: the meta-notes mandated by steps 2 and 5.6.
    - [ ] **Rhetorical scaffolding:** scan for the Signal I checklist patterns (step 5.5) —
      they survive the gate because they feel like good writing. Outputs >150 words get the
      full list in the audit; shorter outputs at minimum check aphorism closers, anaphora,
@@ -379,13 +387,15 @@ When given text to humanize:
    - [ ] **Anaphora.** Same opening word on 2+ consecutive sentences? Collapse or vary the opener.
    - [ ] **Either/or binary.** Clean two-option framing of a spectrum? Name the actual situation.
    - [ ] **Balanced parenthetical pairs.** Symmetric trade-offs in one sentence ("(X, but Y) or (A, but B)")? Real trade-offs are asymmetric; break the symmetry.
+   - [ ] **Tricolon.** Three parallel beats with identical grammar, often conjunction-free and escalating in weight ("Two hours of X, six engineers doing Y, a postmortem where Z.")? Break the third item into its own sentence, join two with "and", or reduce to two.
+   - [ ] **Chiasmus / balanced opposition.** Reversed-parallel construction that sounds like insight ("being specific about being wrong / being vague about being right")? Make the comparison asymmetric.
 
    3+ hits means the patterns compound — address all of them. Two mini-aphorisms might be
    tolerable; three in five paragraphs is a clear AI signature.
 
 5.6. **Output-length sanity check.** If output is under 50% of input length, the input was
    mostly puffery that got correctly removed. **Don't pad it back up** — padding reintroduces
-   the stripped patterns. Instead append, blank-line separated:
+   the stripped patterns. Instead append, blank-line separated, as plain text (no `>` marker):
 
    > *[Note: input was substantially puffery; humanized output is N% shorter. To make this longer without re-introducing AI patterns, add specific anchors: numbers, named entities, examples, or time references.]*
 
@@ -398,9 +408,10 @@ When given text to humanize:
 7. **(Optional) Detector-scored best-of-N.** When stakes are high, run Advanced 1.
 
 8. **Output the rewritten text only.** No preamble ("Here is the humanized version:"), no
-   trailing changelog ("Main moves:", "What I changed:"). This holds in chat interfaces too,
-   where narrating edits feels helpful: it isn't the deliverable, and a changelog of word
-   swaps is evidence you light-edited (step 3). If the user wants a side-by-side, they'll ask.
+   trailing changelog ("Main moves:", "What I changed:"). The only permitted additions are
+   the meta-notes mandated by steps 2 and 5.6. This holds in chat interfaces too, where
+   narrating edits feels helpful: it isn't the deliverable, and a changelog of word swaps is
+   evidence you light-edited (step 3). If the user wants a side-by-side, they'll ask.
 
 ---
 

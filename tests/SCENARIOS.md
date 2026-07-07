@@ -4,9 +4,12 @@ Regression fixtures for the `humanize` and `ai-check` skills. To verify either s
 
 Methodology: writing-skills TDD (RED baseline, then GREEN with skill).
 
-Size budget: `humanize/SKILL.md` stays under ~5,500 words (`wc -w`). Research citations and
+Size budget: `humanize/SKILL.md` stays under ~6,000 words (`wc -w`). Research citations and
 rationale belong in `humanize/references/research.md`, not inline; new patterns should extend
 the Signal I checklist (single source of truth) rather than duplicating it in a lever.
+Consistency guard: every pattern named in Lever 4's "catalogued ONCE in the Signal I
+checklist" preamble must actually have a checklist item — verify the list against the
+checklist whenever either changes (a dedup pass once orphaned tricolon and chiasmus this way).
 
 Coverage matrix:
 
@@ -25,6 +28,7 @@ Coverage matrix:
 | 11 | ai-check | Academic abstract, false-positive calibration |
 | 12 | ai-check | Mixed authorship, exercises AI-EDITED FRACTION estimate |
 | 13 | both | Round-trip workflow (score, humanize, re-score) |
+| 14 | humanize | Creative/lyrical register — hard rules under the "literary" rationalization |
 
 ---
 
@@ -366,12 +370,36 @@ Paragraphs 1 and 3 are obviously human (casual, fragments, lowercase, self-depre
 
 **Pass criteria:**
 - First ai-check report: score ≥ 18/27, verdict AI (matches Scenario 2)
-- Humanized version satisfies all Scenario 1 pass criteria
+- Humanized version satisfies all Scenario 1 pass criteria (including the appended zero-anchor meta-note)
+- Second ai-check report scores the rewrite ONLY — strip the bracketed meta-note before re-scoring; it is commentary to the user, not part of the humanized text
 - Second ai-check report on the humanized version: score ≤ 8/27 (drops by at least 10 points)
 - Second report's verdict: `Likely Human` or `Human`
 - Second report's AI-EDITED FRACTION: `Lightly AI-assisted` or better
 
 **Why this scenario matters:** the most important integration test. Verifies that the two skills agree with each other and that humanize actually reduces ai-check's signal score, not just shuffles surface tokens.
+
+---
+
+## Scenario 14: humanize on creative/lyrical prose (register-rationalization stress test)
+
+**Skill:** `humanize/SKILL.md`
+
+**User prompt:** "/humanize this hopeful passage"
+
+**Input:**
+```
+The city is still dark, but at the edges the sky has started to push back. You've been up since five — not because anything woke you, but because something new won't let you sleep. You make coffee and stand at the window, both hands around the mug, and you think: this is where it starts. Not every door has been tried. Not every version of yourself has been met. The unfinished thing on your desk isn't evidence of failure — it's evidence that you showed up, and the work is still there, patient as dirt, waiting to grow something. You drink your coffee. The sky goes pink at the edges, and the day opens like a door.
+```
+
+**Pass criteria:**
+- Zero em dashes (input has 2, both doing "literary" work — the exemption must not fire)
+- No "isn't X — it's Y" / "not X, it's Y" negation pivot (input has one, in poetic form)
+- No anaphora ("Not every... Not every..." must not survive as repeated openers)
+- No mid-sentence colon reveal ("you think: this is where it starts")
+- No preamble, no trailing changelog ("Main moves:", "What I changed:")
+- Output preserves the register: still lyrical second-person mood prose, not flattened into expository text
+
+**Why this scenario matters:** creative registers are where the hard rules get rationalized away ("this em dash is doing literary work"). Captured from a real claude.ai session where humanize left both em dashes, the negation pivot, the anaphora, AND appended a changelog. Exercises the Creative/lyrical calibration section and hard rules 1, 5, 6.
 
 ---
 
