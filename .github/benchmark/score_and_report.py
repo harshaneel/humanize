@@ -113,8 +113,12 @@ def main():
         f"## Humanize skill benchmark — {'PASS ✅' if passed else 'FAIL ❌'}",
         "",
         f"{len(ids)} fixed AI-flavored inputs humanized with the PR's `humanize/SKILL.md` "
-        f"(executor: {args.executor_label}), then scored with official Binoculars "
-        "(TinyLlama pair, higher = more human) against the raw inputs as baseline.",
+        f"(executor: {args.executor_label}) and scored against the raw inputs as baseline.",
+        "",
+        "**Verification model:** scores come from the official "
+        "[Binoculars](https://github.com/ahans30/Binoculars) zero-shot AI-text detector "
+        "(Hans et al., ICML 2024) running the `TinyLlama-1.1B` base + `TinyLlama-1.1B-Chat` "
+        "model pair.",
         "",
         "**How to read:** each score estimates how human the text reads (higher = more "
         "human). A humanized output should score above the raw AI input it came from; the "
