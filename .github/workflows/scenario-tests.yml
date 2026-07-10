@@ -69,7 +69,7 @@ jobs:
             --humanize-skill humanize/SKILL.md \
             --ai-check-skill ai-check/SKILL.md \
             --model "$EXECUTOR_MODEL" --base-url "$EXECUTOR_BASE_URL" \
-            --min-pass 5 \
+            --min-pass 9 \
             --report /tmp/scenario-report.md --json-out /tmp/scenario-results.json
 
       - name: Upload results

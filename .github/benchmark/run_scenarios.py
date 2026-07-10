@@ -144,26 +144,40 @@ def main():
                     api_key=os.environ.get("LLM_API_KEY", "test"),
                     timeout=600.0, max_retries=0)
 
+    REVISE = (
+        "Re-read the skill in your system prompt. The draft below was produced by applying "
+        "it to a user request. Now perform the skill's OWN verification steps on this draft "
+        "(for a rewrite: the pre-output gate, self-check, and audit pass; for a report: the "
+        "skill's required output format), fix every violation those steps find, and output "
+        "ONLY the corrected final result — no commentary, no list of changes.\n\n"
+        "Original request:\n{user}\n\nDraft:\n{draft}"
+    )
+
     results, resolved_models = [], set()
     for scn in scenarios:
         user = f"{scn['user_prompt']}\n\n{scn['input']}"
-        # Best-of-2: a one-shot executor flips marginal scenarios run to run; a second
-        # independent draw halves the flake rate. Keep the attempt with fewer failures.
-        out, failures, attempts_used = None, None, 0
-        for draw in range(2):
-            o, model = call(client, args.model, skills[scn["skill"]], user)
+        system = skills[scn["skill"]]
+        # Two-pass execution mirrors the skill's draft -> verify -> fix protocol, which a
+        # single completion cannot perform (it can't revise tokens it already emitted).
+        # Pass 2 only invokes the skill's own verification steps, so a PR that weakens
+        # the skill's gates still fails here — the harness adds process, not rules.
+        out, model = call(client, args.model, system, user)
+        resolved_models.add(model)
+        failures = evaluate(scn, out)
+        passes = 1
+        if failures:
+            revised, model = call(client, args.model, system,
+                                  REVISE.format(user=user, draft=out))
             resolved_models.add(model)
-            f = evaluate(scn, o)
-            attempts_used += 1
-            if out is None or len(f) < len(failures):
-                out, failures = o, f
-            if not failures:
-                break
+            f2 = evaluate(scn, revised)
+            passes = 2
+            if len(f2) < len(failures):
+                out, failures = revised, f2
         results.append({"scenario": scn, "output": out, "failures": failures,
-                        "attempts": attempts_used})
+                        "passes": passes})
         status = "PASS" if not failures else f"FAIL ({len(failures)})"
         print(f"  scenario {scn['id']:>2} [{scn['skill']:8s}] {status} "
-              f"(attempts: {attempts_used})  {scn['name']}", file=sys.stderr)
+              f"(passes: {passes})  {scn['name']}", file=sys.stderr)
 
     failed = [r for r in results if r["failures"]]
     n_pass = len(results) - len(failed)
