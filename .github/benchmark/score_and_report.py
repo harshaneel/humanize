@@ -116,6 +116,10 @@ def main():
         f"(executor: {args.executor_label}), then scored with official Binoculars "
         "(TinyLlama pair, higher = more human) against the raw inputs as baseline.",
         "",
+        "**How to read:** each score estimates how human the text reads (higher = more "
+        "human). A humanized output should score above the raw AI input it came from; the "
+        "gate checks the average lift and how many outputs fell below their own input.",
+        "",
         "| Metric | raw inputs (baseline) | humanized (PR skill) |",
         "|---|---|---|",
         f"| Mean | {a_raw['mean']:.4f} | **{a_out['mean']:.4f}** |",
@@ -139,20 +143,21 @@ def main():
         lines += [f"| {raw[i]['register']} | {scores['raw'][i]:.3f} | {scores['out'][i]:.3f} |"
                   for i in below]
         lines += ["", "</details>"]
-    tail = [
-        "",
-        "_Caveats: single run, no significance testing; one-shot executor, so protocol "
-        "compliance is weaker than agentic runs; perplexity-class detector only — says "
-        "nothing about learned classifiers (GPTZero, Grammarly)._",
-    ]
+    tail = []
     if "localaik" in args.executor_label.lower():
         tail += ["",
                  "_Powered by [localaik](https://github.com/harshaneel/localaik) for local testing._"]
 
-    # Per-input inspection blocks, shrunk to fit GitHub's 65,536-char comment limit.
+    # Per-input inspection: one outer dropdown wrapping the per-item dropdowns, shrunk
+    # to fit GitHub's 65,536-char comment limit.
     for cap in (1200, 600, 300):
-        inspection = ["", "### Per-input inspection", ""]
+        inspection = [
+            "",
+            f"<details><summary><b>Per-input inspection ({len(ids)} items)</b></summary>",
+            "",
+        ]
         inspection += [item_block(i, raw, out, scores, cap) for i in ids]
+        inspection += ["", "</details>"]
         report = "\n".join(lines + inspection + tail)
         if len(report) < 60000:
             break
