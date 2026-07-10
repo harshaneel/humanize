@@ -30,6 +30,9 @@ concurrency:
 env:
   BENCH: .github/benchmark
   EXECUTOR_MODEL: gemini-flash-lite-latest
+  # Non-lite tier for the judgment-heavy ai-check scenarios: its free quota is only
+  # ~20 requests/day, which covers <=8 calls/run; falls back to lite when exhausted.
+  EXECUTOR_STRONG_MODEL: gemini-flash-latest
   EXECUTOR_BASE_URL: https://generativelanguage.googleapis.com/v1beta/openai/
 
 jobs:
@@ -68,7 +71,7 @@ jobs:
             --scenarios $BENCH/scenarios.json \
             --humanize-skill humanize/SKILL.md \
             --ai-check-skill ai-check/SKILL.md \
-            --model "$EXECUTOR_MODEL" --base-url "$EXECUTOR_BASE_URL" \
+            --model "$EXECUTOR_MODEL" --strong-model "$EXECUTOR_STRONG_MODEL" --base-url "$EXECUTOR_BASE_URL" \
             --min-pass 6 \
             --report /tmp/scenario-report.md --json-out /tmp/scenario-results.json
 

@@ -28,29 +28,38 @@ SYSTEM = (
 )
 
 
-def call(client, model, system, user):
-    attempts, waits = 6, (20, 40, 80, 160, 300)
-    for attempt in range(attempts):
-        try:
-            resp = client.chat.completions.create(
-                model=model,
-                max_tokens=1800,
-                temperature=0.4,
-                messages=[
-                    {"role": "system", "content": system},
-                    {"role": "user", "content": user},
-                ],
-            )
-            out = (resp.choices[0].message.content or "").strip()
-            if out:
-                return out, getattr(resp, "model", None) or model
-            raise RuntimeError("empty completion")
-        except Exception as e:  # noqa: BLE001 - retry any transport/server hiccup
-            if attempt == attempts - 1:
-                raise
-            print(f"    attempt {attempt + 1} failed ({e}); retrying in {waits[attempt]}s",
-                  file=sys.stderr)
-            time.sleep(waits[attempt])
+def call(client, models, system, user):
+    """Try each model in order; within a model, retry transient errors with backoff.
+    A later list entry is the fallback when an earlier model's quota is exhausted
+    (e.g. the non-lite tier's small requests-per-day allowance)."""
+    last_err = None
+    for mi, model in enumerate(models):
+        attempts, waits = (3, (20, 40)) if mi < len(models) - 1 else (6, (20, 40, 80, 160, 300))
+        for attempt in range(attempts):
+            try:
+                resp = client.chat.completions.create(
+                    model=model,
+                    max_tokens=1800,
+                    temperature=0.4,
+                    messages=[
+                        {"role": "system", "content": system},
+                        {"role": "user", "content": user},
+                    ],
+                )
+                out = (resp.choices[0].message.content or "").strip()
+                if out:
+                    return out, getattr(resp, "model", None) or model
+                raise RuntimeError("empty completion")
+            except Exception as e:  # noqa: BLE001 - retry any transport/server hiccup
+                last_err = e
+                if attempt == attempts - 1:
+                    break
+                print(f"    [{model}] attempt {attempt + 1} failed ({e}); "
+                      f"retrying in {waits[attempt]}s", file=sys.stderr)
+                time.sleep(waits[attempt])
+        if mi < len(models) - 1:
+            print(f"    [{model}] exhausted; falling back to {models[mi + 1]}", file=sys.stderr)
+    raise last_err
 
 
 def report_field(text, name):
@@ -125,6 +134,10 @@ def main():
     p.add_argument("--humanize-skill", required=True)
     p.add_argument("--ai-check-skill", required=True)
     p.add_argument("--model", required=True)
+    p.add_argument("--strong-model", default=None,
+                   help="Model for ai-check scenarios (judgment-heavy; the lite tier "
+                        "measurably can't do them). Falls back to --model when its "
+                        "daily quota is exhausted.")
     p.add_argument("--base-url", required=True)
     p.add_argument("--report", required=True)
     p.add_argument("--json-out", required=True)
@@ -157,16 +170,21 @@ def main():
     for scn in scenarios:
         user = f"{scn['user_prompt']}\n\n{scn['input']}"
         system = skills[scn["skill"]]
+        # ai-check scenarios need judgment (register calibration, mixed authorship) that
+        # the lite tier measurably lacks; route them to the strong model when configured.
+        models = [args.model]
+        if scn["skill"] == "ai-check" and args.strong_model:
+            models = [args.strong_model, args.model]
         # Two-pass execution mirrors the skill's draft -> verify -> fix protocol, which a
         # single completion cannot perform (it can't revise tokens it already emitted).
         # Pass 2 only invokes the skill's own verification steps, so a PR that weakens
         # the skill's gates still fails here — the harness adds process, not rules.
-        out, model = call(client, args.model, system, user)
+        out, model = call(client, models, system, user)
         resolved_models.add(model)
         failures = evaluate(scn, out)
         passes = 1
         if failures:
-            revised, model = call(client, args.model, system,
+            revised, model = call(client, models, system,
                                   REVISE.format(user=user, draft=out))
             resolved_models.add(model)
             f2 = evaluate(scn, revised)
