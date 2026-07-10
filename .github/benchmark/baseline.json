@@ -1,0 +1,5 @@
+{
+  "_comment": "Pass criteria for the skill benchmark. Scores are official-Binoculars (TinyLlama pair), higher = more human. The raw-input baseline is scored fresh every run; thresholds are relative to it. Calibrated 2026-07-10 to the Gemini flash-lite executor, which measured +0.076 mean lift with 2/25 outputs below raw on the then-current skill; thresholds sit just under that so the gate flags skill regressions, not executor noise. Reference: frontier agentic runs measure ~+0.146 with 0 below raw. Tune deliberately, with a PR.",
+  "min_mean_lift_over_raw": 0.05,
+  "max_outputs_below_own_raw_input": 4
+}
