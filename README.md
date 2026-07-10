@@ -1,6 +1,6 @@
 # humanize
 
-**LLM-agnostic skills for static AI text humanization and detection.**  
+**LLM-agnostic skills that make AI writing sound human and relatable.**  
 Grounded in 50+ peer-reviewed sources through April 2026.
 
 Works in any LLM agent: Claude Code, Codex CLI, ChatGPT, Gemini, Cursor, Aider, OpenCode, Continue, Copilot. The install paths differ; the skill content is identical.
@@ -26,7 +26,7 @@ Works in any LLM agent: Claude Code, Codex CLI, ChatGPT, Gemini, Cursor, Aider, 
 - [Background](#background) — the gap between AI and human writing
 - [The detection literature](#the-detection-literature-what-researchers-measure) — perplexity, burstiness, stylometry, discourse
 - [Detection methodology taxonomy](#detection-methodology-taxonomy) — zero-shot, classifier, watermarking, hybrid
-- [Adversarial findings](#adversarial-findings-what-breaks-detectors) — what evasion techniques actually do to detectors
+- [What the research shows about surface rewriting](#what-the-research-shows-about-surface-rewriting) — why the same edits that read human also move the numbers
 - [The nine humanization levers](#the-nine-humanization-levers) — the rules the skill applies
 
 **Limits and what closes them**
@@ -44,12 +44,12 @@ Works in any LLM agent: Claude Code, Codex CLI, ChatGPT, Gemini, Cursor, Aider, 
 
 | Skill | What it does | Trigger |
 | --- | --- | --- |
-| **`humanize`** | Rewrites or generates text that reads as human-authored by applying nine humanization levers from the detection literature. | "humanize this", "make this sound more human", "rewrite to avoid AI detection", "write this like a person" |
+| **`humanize`** | Rewrites or generates text so it reads the way a person actually writes — natural rhythm, real specifics, a voice — by applying nine humanization levers drawn from the detection literature. | "humanize this", "make this sound more human", "make this less robotic", "write this like a person" |
 | **`ai-check`** | Forensic analysis of text for AI-generation signals. Scores 9 signal categories, cites every flag with evidence, returns a verdict + confidence + AI-edited fraction estimate. | "does this sound AI?", "run ai-check on this", "score this text" |
 
 Both are static rule-based skills (single `SKILL.md` per skill, zero runtime dependencies). Six advanced hybrid techniques are documented in the `humanize` skill for high-stakes use.
 
-**What "static" means here.** No models trained, no API calls, no detector-in-the-loop. The skill is a rulebook the host LLM follows. Effective against perplexity-based detectors (ZeroGPT, QuillBot). The "What this approach cannot do" section below is honest about the learned-classifier ceiling (Grammarly, GPTZero) and what additional steps close that gap.
+**What "static" means here.** No models trained, no API calls, no detector-in-the-loop. The skill is a rulebook the host LLM follows. The detection research is the measuring instrument, not the target: it tells us precisely where AI prose diverges from human prose, and closing those gaps is what makes the writing read as human. That the same edits also lower perplexity-based scores (ZeroGPT, QuillBot) is a consequence, not the goal. The "What this approach cannot do" section below is honest about the learned-classifier ceiling (Grammarly, GPTZero) and what additional steps close that gap.
 
 ---
 
@@ -229,7 +229,7 @@ All 25 outputs scored above the threshold, on the Human side of Binoculars' deci
 
 What this benchmark proves: `humanize` produces text that reads as Human or Likely Human under both rule-based and cross-perplexity detectors, across 25 distinct registers.
 
-What it does NOT prove: the output evades learned commercial classifiers (GPTZero, Grammarly, Pangram). Those score the same humanized output as 99–100% AI because the RLHF fingerprint lives in model weights, and static surface rewriting alone cannot reach it. The "What this rule-based approach cannot do" section below documents this ceiling and what closes it.
+What it does NOT prove: that the output reads as human to learned commercial classifiers (GPTZero, Grammarly, Pangram). Those still score the same humanized output as 99–100% AI, because the RLHF fingerprint lives in model weights and static surface rewriting alone cannot reach it. The "What this rule-based approach cannot do" section below documents this ceiling and what closes it.
 
 ### Reproducibility
 
@@ -272,9 +272,9 @@ This repo's `humanize` skill is designed for Claude Code and works in any LLM ag
 
 Clone the repo and run `./install.sh all` to install to all three agent skills directories (`~/.claude/skills/`, `~/.codex/skills/`, `~/.agents/skills/`). Or pick a single target: `./install.sh claude`, `./install.sh codex`, `./install.sh chatgpt`. For Claude Desktop or any web chat agent, upload the `SKILL.md` files through Settings → Skills, or paste them into the conversation as a system prompt.
 
-### Does this humanize skill beat GPTZero or Grammarly's AI detector?
+### Will the output read as human to GPTZero or Grammarly?
 
-No, and the README is explicit about this. Static rule-based humanization defeats perplexity-based detectors (ZeroGPT, QuillBot, official Binoculars). It does NOT defeat learned classifiers like GPTZero, Grammarly, or Pangram because they detect the RLHF / instruction-tuning fingerprint encoded in the model's weights, which surface rewriting alone cannot reach. To close that gap, the README documents three additional techniques: cross-model paraphrase chains, base-model paraphrase, and manual edits with deliberate human artifacts.
+Not on their scores alone. Static rule-based humanization makes text read human to people and to perplexity-based tools (ZeroGPT, QuillBot, official Binoculars). Learned classifiers like GPTZero, Grammarly, or Pangram still flag it, because they read the RLHF / instruction-tuning fingerprint encoded in the model's weights, which surface rewriting alone can't reach. That's a ceiling of the static approach, not a goal it's chasing: the skill's job is human-sounding prose, and the README documents three further techniques (cross-model paraphrase chains, base-model paraphrase, manual edits) for cases where the classifier score matters too.
 
 ### What's the difference between `humanize` and `ai-check`?
 
@@ -418,11 +418,11 @@ Combines hand-engineered linguistic features with transformer embeddings.
 
 ---
 
-## Adversarial findings: what breaks detectors
+## What the research shows about surface rewriting
 
-This is where the field gets uncomfortable. The back-and-forth between detectors and evasion techniques is documented across dozens of papers, and evasion has had the upper hand since at least 2024.
+Detection is a moving target, and the literature is candid about it: surface-level rewriting shifts detector scores far more than the tools' marketing implies. That matters here for one reason — it tells us how load-bearing surface features really are, which is the same knowledge the skill uses to make prose read human. The findings below use the field's own adversarial framing (that's how the papers are written); read them as evidence about which features carry the AI signal, not as a playbook.
 
-**Paraphrasing attacks** are the simplest and most effective evasion. Plain paraphrasing drops detection accuracy to 12 to 15% on many systems (Santa Fe CC research guide, 2024). To run the attack, prompt any LLM with "rephrase this in different words." That's it.
+**Paraphrasing** is the simplest and most effective transformation. Plain paraphrasing drops detection accuracy to 12 to 15% on many systems (Santa Fe CC research guide, 2024). To reproduce it, prompt any LLM with "rephrase this in different words." That's it.
 
 **Adversarial paraphrasing (arXiv 2506.07001)** is a guided attack where a trained detector provides gradient signal to steer the paraphrasing. Average true-positive-rate drop of 87.88% across eight detectors spanning three categories: trained classifiers, watermark-based, and zero-shot. The attack also transfers. Paraphrases optimized against one detector fool others, because all the detectors are calibrated against roughly the same human text distribution.
 
@@ -505,15 +505,15 @@ Summary of reported performance across detection methods:
 | PIFE adversarially-robust detector                   | 82.6% TPR at 1% FPR              | Semantic attacks                   | arXiv 2510.02319         |
 
 
-The summary is brutal. In-distribution accuracy is high. Out-of-distribution and adversarial accuracy is poor. No commercially available detector reliably identifies modern LLM output that has been deliberately paraphrased.
+The pattern is consistent. In-distribution accuracy is high. Out-of-distribution accuracy is poor, and drops further once text has been rewritten. No commercially available detector reliably identifies modern LLM output that has been substantially rephrased — which is the same reason genuinely human-sounding rewrites are hard to tell apart from human writing.
 
 ---
 
 ## Known limitations
 
-**This skill does not guarantee 0% AI scores on commercial detectors.** No method does, reliably. The goal is closing the linguistic gap between AI and human writing. Gaming a specific detector is a different problem.
+**This skill does not guarantee 0% AI scores on commercial detectors.** No method does, reliably. The goal is closing the linguistic gap between AI and human writing so the result reads naturally to a reader. Chasing a particular detector's score is a different problem, and not the one this skill solves.
 
-**The goalposts move.** Detection systems improve continuously. A text that scores as human today may not score that way after the next detector update.
+**Detectors keep changing.** Detection systems improve continuously. Since the skill targets human-sounding writing rather than any one tool, that mostly doesn't affect it — but a specific tool's score on a given text can still shift after an update.
 
 **False confidence risk.** Stylistically humanized text can still carry AI-characteristic errors: confident hallucinations, missing personal experience, implausible specificity. Humanizing form is one thing. Humanizing substance is harder.
 
