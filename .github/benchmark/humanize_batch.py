@@ -109,7 +109,8 @@ def main():
                       file=sys.stderr)
                 time.sleep(wait)
         results.append({"id": entry["id"], "register": entry["register"], "humanized_text": out,
-                        "seconds": round(time.time() - t0, 1)})
+                        "seconds": round(time.time() - t0, 1),
+                        "model": getattr(resp, "model", None) or args.model})
         # Checkpoint after every item so a crash never loses the completed portion.
         with open(args.output, "w") as f:
             json.dump(results, f, indent=1)

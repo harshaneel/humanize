@@ -26,7 +26,7 @@ def load(path, text_key_candidates=("humanized_text", "text")):
     for e in entries:
         text = next(e[k] for k in text_key_candidates if k in e)
         out[e["id"]] = {"register": e["register"], "text": strip_meta_note(text),
-                        "seconds": e.get("seconds")}
+                        "seconds": e.get("seconds"), "model": e.get("model")}
     return out
 
 
@@ -108,15 +108,21 @@ def main():
     def check(ok):
         return "✅" if ok else "❌"
 
+    # Aliases like gemini-flash-lite-latest resolve to a concrete version at request
+    # time; the executor records it per output. Show the distinct resolved names.
+    resolved = sorted({e["model"] for e in out.values() if e.get("model")})
+    resolved_note = f"; resolved model: `{'`, `'.join(resolved)}`" if resolved else ""
+
     lines = [
         MARKER,
         f"## Humanize skill benchmark — {'PASS ✅' if passed else 'FAIL ❌'}",
         "",
         f"{len(ids)} fixed AI-flavored inputs humanized with the PR's `humanize/SKILL.md` "
-        f"(executor: {args.executor_label}) and scored against the raw inputs as baseline.",
+        f"(executor: {args.executor_label}{resolved_note}) and scored against the raw "
+        "inputs as baseline.",
         "",
-        "**Verification model:** scores come from the official "
-        "[Binoculars](https://github.com/ahans30/Binoculars) zero-shot AI-text detector "
+        "**Scoring model:** the official "
+        "[Binoculars](https://github.com/ahans30/Binoculars) zero-shot scorer "
         "(Hans et al., ICML 2024) running the `TinyLlama-1.1B` base + `TinyLlama-1.1B-Chat` "
         "model pair.",
         "",
