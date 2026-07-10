@@ -29,7 +29,7 @@ concurrency:
 
 env:
   BENCH: .github/benchmark
-  EXECUTOR_MODEL: gemini-flash-lite-latest
+  EXECUTOR_MODEL: gemini-flash-latest
   EXECUTOR_BASE_URL: https://generativelanguage.googleapis.com/v1beta/openai/
 
 jobs:

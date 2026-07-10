@@ -82,7 +82,8 @@
    {
     "type": "verdict_in",
     "values": [
-     "Human"
+     "Human",
+     "Likely Human"
     ]
    },
    {
