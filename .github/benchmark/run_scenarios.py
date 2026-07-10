@@ -35,7 +35,9 @@ def call(client, model, system, user):
             resp = client.chat.completions.create(
                 model=model,
                 max_tokens=1800,
-                temperature=0.4,
+                # Low temperature: scenario checks gate on compliance, and run-to-run
+                # sampling variance otherwise flips marginal scenarios between runs.
+                temperature=0.2,
                 messages=[
                     {"role": "system", "content": system},
                     {"role": "user", "content": user},
@@ -54,14 +56,15 @@ def call(client, model, system, user):
 
 
 def report_field(text, name):
-    m = re.search(rf"{re.escape(name)}\s*[:*\]]*\s*([A-Za-z][A-Za-z /-]*)", text, re.I)
+    # Tolerate "FIELD: value", "**FIELD:** value", "FIELD | value" (table rows), etc.
+    m = re.search(rf"{re.escape(name)}\s*[:*\]|_-]*\s*([A-Za-z][A-Za-z /-]*)", text, re.I)
     if not m:
         return None
     return re.sub(r"[^A-Za-z -]", "", m.group(1)).strip()
 
 
 def report_score(text):
-    m = re.search(r"OVERALL SCORE\s*[:*\]]*\s*(\d+)", text, re.I)
+    m = re.search(r"OVERALL SCORE\s*[:*\]|_-]*\s*(\d+)", text, re.I)
     return int(m.group(1)) if m else None
 
 
@@ -127,6 +130,9 @@ def main():
     p.add_argument("--base-url", required=True)
     p.add_argument("--report", required=True)
     p.add_argument("--json-out", required=True)
+    p.add_argument("--min-pass", type=int, default=None,
+                   help="Gate passes when at least this many scenarios pass "
+                        "(default: all must pass)")
     args = p.parse_args()
 
     with open(args.scenarios) as f:
@@ -152,12 +158,15 @@ def main():
               file=sys.stderr)
 
     failed = [r for r in results if r["failures"]]
-    passed = not failed
+    n_pass = len(results) - len(failed)
+    required = args.min_pass if args.min_pass is not None else len(results)
+    passed = n_pass >= required
     resolved = f"; resolved model: `{'`, `'.join(sorted(resolved_models))}`"
 
     lines = [
         MARKER,
-        f"## Scenario tests — {'PASS ✅' if passed else 'FAIL ❌'}",
+        f"## Scenario tests — {'PASS ✅' if passed else 'FAIL ❌'} "
+        f"({n_pass}/{len(results)} scenarios, gate requires ≥ {required})",
         "",
         f"{len(results)} behavioral fixtures from `tests/SCENARIOS.md`, executed with the "
         f"PR's skill files (executor: `{args.model}`{resolved}) and checked against each "
@@ -185,7 +194,7 @@ def main():
     with open(args.report, "w") as f:
         f.write(report)
     with open(args.json_out, "w") as f:
-        json.dump({"pass": passed,
+        json.dump({"pass": passed, "n_pass": n_pass, "required": required,
                    "failed": [{"id": r["scenario"]["id"], "failures": r["failures"]}
                               for r in failed],
                    "results": [{"id": r["scenario"]["id"], "output": r["output"],
