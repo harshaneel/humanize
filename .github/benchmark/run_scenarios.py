@@ -190,6 +190,11 @@ def main():
         f"## Scenario tests — {'PASS ✅' if passed else 'FAIL ❌'} "
         f"({n_pass}/{len(results)} scenarios, gate requires ≥ {required})",
         "",
+        f"_The gate threshold is a **regression floor** calibrated to this executor's "
+        f"measured ceiling on the current skills — red means a PR scores below today's "
+        f"behavior, not that {required}/{len(results)} is the quality goal (the goal is "
+        f"{len(results)}/{len(results)}; frontier agentic executors reach it)._",
+        "",
         f"{len(results)} behavioral fixtures from `tests/SCENARIOS.md`, executed with the "
         f"PR's skill files (executor: `{args.model}`{resolved}) and checked against each "
         "scenario's objective pass criteria.",
@@ -220,7 +225,8 @@ def main():
                    "failed": [{"id": r["scenario"]["id"], "failures": r["failures"]}
                               for r in failed],
                    "results": [{"id": r["scenario"]["id"], "output": r["output"],
-                                "failures": r["failures"]} for r in results]}, f, indent=1)
+                                "failures": r["failures"], "passes": r.get("passes")}
+                               for r in results]}, f, indent=1)
     print(report)
 
 
