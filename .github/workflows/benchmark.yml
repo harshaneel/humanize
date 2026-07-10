@@ -1,0 +1,183 @@
+name: skill-benchmark
+
+on:
+  # Same-repo PRs: workflow and code run from the PR branch (trusted).
+  pull_request:
+    paths:
+      - "humanize/SKILL.md"
+      - ".github/benchmark/**"
+      - ".github/workflows/benchmark.yml"
+  # Fork PRs: workflow and ALL code run from the base branch; only the fork's
+  # humanize/SKILL.md is fetched, as prompt data. Fork code never executes here.
+  pull_request_target:
+    types: [opened, synchronize, reopened, labeled]
+    paths:
+      - "humanize/SKILL.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: benchmark-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  BENCH: .github/benchmark
+  # Rolling alias: tracks Google's current flash-lite model, survives model retirements
+  # (fixed ids like gemini-2.5-flash 404 for accounts created after retirement, and the
+  # top flash tier free lane throws 503 "high demand" at peak; lite has capacity headroom).
+  EXECUTOR_MODEL: gemini-flash-lite-latest
+  EXECUTOR_BASE_URL: https://generativelanguage.googleapis.com/v1beta/openai/
+
+jobs:
+  # Job 1: LLM inference via the Gemini free tier. The GEMINI_API_KEY secret lives in
+  # the `benchmark` environment with a required reviewer, so every run that needs it
+  # waits for maintainer approval and the key is unusable outside this job.
+  humanize:
+    # pull_request covers same-repo PRs; pull_request_target covers forks. The two
+    # conditions are mutually exclusive so a same-repo PR never runs twice.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+      (github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name != github.repository)
+    runs-on: ubuntu-latest
+    environment: benchmark
+    timeout-minutes: 45
+    steps:
+      # For pull_request this checks out the PR merge ref; for pull_request_target it
+      # checks out the BASE branch (safe default) — fork code is never checked out.
+      - uses: actions/checkout@v4
+
+      - name: Take the fork PR's SKILL.md as data (fork PRs only)
+        if: github.event_name == 'pull_request_target'
+        run: |
+          git fetch origin "pull/${{ github.event.pull_request.number }}/head"
+          git checkout FETCH_HEAD -- humanize/SKILL.md
+          echo "Benchmarking fork skill: $(wc -w < humanize/SKILL.md) words"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install client deps
+        run: pip install --quiet openai
+
+      - name: Seed partial outputs from previous attempt (re-runs only)
+        if: github.run_attempt != '1'
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: humanized-outputs
+          path: /tmp
+
+      - name: Humanize inputs with the PR skill
+        # Resumes past any ids already present in /tmp/outputs.json (seeded above on re-runs).
+        env:
+          LLM_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python $BENCH/humanize_batch.py --skill humanize/SKILL.md \
+            --inputs $BENCH/inputs.json --output /tmp/outputs.json \
+            --base-url "$EXECUTOR_BASE_URL" --model "$EXECUTOR_MODEL"
+
+      - name: Upload humanized outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: humanized-outputs
+          path: /tmp/outputs.json
+          if-no-files-found: error
+          overwrite: true
+
+  # Job 2: scoring + report + gate. No secret needed, separate runner, so a scoring
+  # failure is a cheap "Re-run failed jobs" that reuses the inference artifact.
+  score:
+    needs: humanize
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache HF models (Binoculars scorer)
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-tinyllama-binoculars-v1
+
+      - name: Install scorer deps
+        run: |
+          pip install --quiet torch==2.12.0 --index-url https://download.pytorch.org/whl/cpu
+          pip install --quiet transformers==5.9.0 accelerate==1.13.0 numpy==2.4.6
+          git clone https://github.com/ahans30/Binoculars.git /tmp/binoculars-src
+          git -C /tmp/binoculars-src checkout c8ae2f90d50ee696418bc71d8d9e5020e5f9d7b8
+          pip install --quiet --no-deps -e /tmp/binoculars-src
+
+      - name: Download humanized outputs
+        uses: actions/download-artifact@v4
+        with:
+          name: humanized-outputs
+          path: /tmp
+
+      - name: Score against baseline and build report
+        run: |
+          python $BENCH/score_and_report.py \
+            --inputs $BENCH/inputs.json \
+            --outputs /tmp/outputs.json \
+            --baseline $BENCH/baseline.json \
+            --executor-label "Google Gemini (\`$EXECUTOR_MODEL\`, free tier, one-shot)" \
+            --report /tmp/report.md --json-out /tmp/results.json
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-report
+          path: |
+            /tmp/results.json
+            /tmp/report.md
+          overwrite: true
+
+      - name: Post or update PR comment
+        # pull_request_target grants a write token, so fork-PR comments work too.
+        if: always() && (github.event_name == 'pull_request' || github.event_name == 'pull_request_target')
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            if (!fs.existsSync('/tmp/report.md')) {
+              core.warning('No report produced; skipping comment.');
+              return;
+            }
+            const body = fs.readFileSync('/tmp/report.md', 'utf8');
+            const marker = '<!-- humanize-benchmark -->';
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100,
+            });
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
+      - name: Enforce baseline
+        run: |
+          python -c "import json,sys; r=json.load(open('/tmp/results.json')); sys.exit(0 if r['pass'] else 1)"
