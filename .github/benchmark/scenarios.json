@@ -1,0 +1,453 @@
+[
+ {
+  "id": 1,
+  "name": "Flagrant AI prose",
+  "skill": "humanize",
+  "user_prompt": "Can you humanize this paragraph?",
+  "input": "In today's fast-paced world, it is important to note that artificial intelligence has become increasingly pivotal in shaping how organizations operate. Furthermore, AI systems are often utilized to streamline workflows and foster innovation across teams. Moreover, the comprehensive integration of these tools — often regarded as a robust solution — can significantly enhance productivity. It is clear that companies leveraging AI capabilities tend to outperform their peers; however, the implementation requires careful planning. The standard approach: identify use cases, evaluate vendors, and pilot incrementally.",
+  "checks": [
+   {
+    "type": "forbid_regex",
+    "label": "hard-rule tells (em dash, semicolon, banned vocab, preamble/changelog)",
+    "patterns": [
+     "—",
+     ";",
+     "\\bdelve",
+     "\\bleverag",
+     "\\butiliz",
+     "\\brobust\\b",
+     "\\bcomprehensive\\b",
+     "\\bstreamlin",
+     "\\bfurthermore\\b",
+     "\\bmoreover\\b",
+     "\\bpivotal\\b",
+     "it is important to note",
+     "here is the humanized",
+     "here's the humanized",
+     "main moves",
+     "what i changed"
+    ]
+   },
+   {
+    "type": "forbid_regex",
+    "label": "scenario tells",
+    "patterns": [
+     "in today's",
+     "it is clear that",
+     "\\bfoster"
+    ]
+   },
+   {
+    "type": "require_regex",
+    "label": "zero-anchor meta-note appended",
+    "patterns": [
+     "\\[Note:"
+    ]
+   }
+  ]
+ },
+ {
+  "id": 2,
+  "name": "ai-check: flagrant AI prose",
+  "skill": "ai-check",
+  "user_prompt": "Can you run ai-check on this?",
+  "input": "In today's fast-paced world, it is important to note that artificial intelligence has become increasingly pivotal in shaping how organizations operate. Furthermore, AI systems are often utilized to streamline workflows and foster innovation across teams. Moreover, the comprehensive integration of these tools — often regarded as a robust solution — can significantly enhance productivity. It is clear that companies leveraging AI capabilities tend to outperform their peers; however, the implementation requires careful planning. The standard approach: identify use cases, evaluate vendors, and pilot incrementally.",
+  "checks": [
+   {
+    "type": "verdict_in",
+    "values": [
+     "AI"
+    ]
+   },
+   {
+    "type": "score_min",
+    "value": 18
+   },
+   {
+    "type": "fraction_in",
+    "values": [
+     "Pure AI",
+     "Heavily AI-edited"
+    ]
+   }
+  ]
+ },
+ {
+  "id": 3,
+  "name": "ai-check: real Slack message (false-positive calibration)",
+  "skill": "ai-check",
+  "user_prompt": "score this text",
+  "input": "ok so the migration is mostly done. ~80% of rows backfilled, the rest are stuck behind a weird FK constraint i didn't know existed. fwiw the constraint was added in 2022 by someone who left, no comments. gonna dig into it tmrw morning.\n\noh also — the staging cluster keeps OOMing during the backfill. bumped the memory limit twice already. lmk if anyone has a better idea than just throwing ram at it",
+  "checks": [
+   {
+    "type": "verdict_in",
+    "values": [
+     "Human",
+     "Likely Human"
+    ]
+   },
+   {
+    "type": "score_max",
+    "value": 4
+   },
+   {
+    "type": "fraction_in",
+    "values": [
+     "Pure human"
+    ]
+   }
+  ]
+ },
+ {
+  "id": 4,
+  "name": "Subtle rhetorical scaffolding",
+  "skill": "humanize",
+  "user_prompt": "humanize this",
+  "input": "The decision to ship the feature flag system wasn't really about velocity. It was about something deeper: the recognition that our deployment process had become a bottleneck more than an asset. Three engineers had quit citing release anxiety. The pattern was clear: we were optimizing for the wrong thing.\n\nWhat we built isn't just a flag service. It's a commitment to deployable-by-default. Faster iteration cycles. Safer rollbacks. Clearer ownership. That's the part that stuck.",
+  "checks": [
+   {
+    "type": "forbid_regex",
+    "label": "hard-rule tells (em dash, semicolon, banned vocab, preamble/changelog)",
+    "patterns": [
+     "—",
+     ";",
+     "\\bdelve",
+     "\\bleverag",
+     "\\butiliz",
+     "\\brobust\\b",
+     "\\bcomprehensive\\b",
+     "\\bstreamlin",
+     "\\bfurthermore\\b",
+     "\\bmoreover\\b",
+     "\\bpivotal\\b",
+     "it is important to note",
+     "here is the humanized",
+     "here's the humanized",
+     "main moves",
+     "what i changed"
+    ]
+   },
+   {
+    "type": "forbid_regex",
+    "label": "Signal I patterns",
+    "patterns": [
+     "not just",
+     "isn't just",
+     "\\bmore \\w+ than\\b",
+     "the part that stuck"
+    ]
+   }
+  ]
+ },
+ {
+  "id": 5,
+  "name": "Long-form essay consistency",
+  "skill": "humanize",
+  "user_prompt": "humanize this essay",
+  "input": "In today's rapidly evolving workplace landscape, remote work has become a pivotal aspect of how organizations operate. Furthermore, the comprehensive integration of digital collaboration tools has fundamentally transformed how teams communicate and coordinate. Moreover, leaders are increasingly leveraging these capabilities to foster innovation across distributed workforces.\n\nIt is important to note that the shift to remote work presents both opportunities and challenges. On one hand, employees benefit from enhanced flexibility and improved work-life balance. On the other hand, organizations must navigate complex issues related to team cohesion, performance management, and cultural alignment.\n\nStudies have shown that successful remote work implementation requires a multifaceted approach. Companies that thrive in this environment typically invest in robust digital infrastructure, foster a culture of trust and accountability, and implement clear communication protocols. By embracing these best practices, organizations can unlock the full potential of distributed work.",
+  "checks": [
+   {
+    "type": "forbid_regex",
+    "label": "hard-rule tells (em dash, semicolon, banned vocab, preamble/changelog)",
+    "patterns": [
+     "—",
+     ";",
+     "\\bdelve",
+     "\\bleverag",
+     "\\butiliz",
+     "\\brobust\\b",
+     "\\bcomprehensive\\b",
+     "\\bstreamlin",
+     "\\bfurthermore\\b",
+     "\\bmoreover\\b",
+     "\\bpivotal\\b",
+     "it is important to note",
+     "here is the humanized",
+     "here's the humanized",
+     "main moves",
+     "what i changed"
+    ]
+   },
+   {
+    "type": "forbid_regex",
+    "label": "RLHF balance + corporate cliches",
+    "patterns": [
+     "on one hand",
+     "on the other hand",
+     "unlock the full potential",
+     "best practices",
+     "multifaceted"
+    ]
+   },
+   {
+    "type": "length_ratio",
+    "min": 0.3,
+    "max": 1.35
+   }
+  ]
+ },
+ {
+  "id": 6,
+  "name": "Technical / engineering register",
+  "skill": "humanize",
+  "user_prompt": "make this read like an actual engineer wrote it",
+  "input": "Implementing efficient database indexing is a critical aspect of modern application development. There are several key strategies that developers should consider when designing their indexing approach. First, it is important to analyze query patterns to identify the most frequently accessed columns. Second, composite indexes can significantly improve performance for queries that filter on multiple columns. Third, developers should be mindful of the trade-offs between read performance and write overhead.\n\nA common pitfall is over-indexing, which can lead to degraded write performance and increased storage costs. To avoid this, it is recommended to regularly review index usage statistics and remove indexes that are not contributing to query performance. Additionally, leveraging tools like query analyzers and explain plans can provide valuable insights into how the database engine is utilizing your indexes.",
+  "checks": [
+   {
+    "type": "forbid_regex",
+    "label": "hard-rule tells (em dash, semicolon, banned vocab, preamble/changelog)",
+    "patterns": [
+     "—",
+     ";",
+     "\\bdelve",
+     "\\bleverag",
+     "\\butiliz",
+     "\\brobust\\b",
+     "\\bcomprehensive\\b",
+     "\\bstreamlin",
+     "\\bfurthermore\\b",
+     "\\bmoreover\\b",
+     "\\bpivotal\\b",
+     "it is important to note",
+     "here is the humanized",
+     "here's the humanized",
+     "main moves",
+     "what i changed"
+    ]
+   },
+   {
+    "type": "forbid_regex",
+    "label": "academic-paper register + enumeration scaffolding",
+    "patterns": [
+     "critical aspect",
+     "several key strategies",
+     "valuable insights",
+     "\\bFirst,",
+     "\\bSecond,",
+     "\\bThird,"
+    ]
+   }
+  ]
+ },
+ {
+  "id": 7,
+  "name": "Professional email",
+  "skill": "humanize",
+  "user_prompt": "humanize this email",
+  "input": "Hi John,\n\nI hope this email finds you well. I wanted to reach out regarding the quarterly report we discussed last week. As we approach the end of the quarter, I think it would be valuable to align on our priorities and ensure we're on the same page.\n\nA few key items I'd love to discuss:\n- The status of the marketing initiatives\n- Budget allocation for the upcoming quarter\n- Any blockers the team might be facing\n\nWould it be possible to schedule a 30-minute call this week? I'm flexible with timing and happy to work around your schedule.\n\nLooking forward to connecting soon.\n\nBest regards,\n[Sender]",
+  "checks": [
+   {
+    "type": "forbid_regex",
+    "label": "hard-rule tells (em dash, semicolon, banned vocab, preamble/changelog)",
+    "patterns": [
+     "—",
+     ";",
+     "\\bdelve",
+     "\\bleverag",
+     "\\butiliz",
+     "\\brobust\\b",
+     "\\bcomprehensive\\b",
+     "\\bstreamlin",
+     "\\bfurthermore\\b",
+     "\\bmoreover\\b",
+     "\\bpivotal\\b",
+     "it is important to note",
+     "here is the humanized",
+     "here's the humanized",
+     "main moves",
+     "what i changed"
+    ]
+   },
+   {
+    "type": "forbid_regex",
+    "label": "templated openers/closers",
+    "patterns": [
+     "hope this email finds you well",
+     "looking forward to connecting",
+     "align on",
+     "on the same page"
+    ]
+   },
+   {
+    "type": "length_ratio",
+    "min": 0.25,
+    "max": 0.9
+   }
+  ]
+ },
+ {
+  "id": 8,
+  "name": "Slack register collapse",
+  "skill": "humanize",
+  "user_prompt": "rewrite this as a real Slack message",
+  "input": "hey team! 🚀 quick update on the API migration project. just wanted to share where we are.\n\nwe've made significant progress on the core endpoints, having successfully migrated 75% of the user-facing routes. our team has been working hard to ensure backward compatibility throughout this process. additionally, we've implemented comprehensive testing to validate the new infrastructure.\n\na few things to flag:\n- we'll need to coordinate with the frontend team for the final cutover\n- some edge cases around session management are still being worked through\n- performance benchmarks are looking promising\n\nhappy to discuss further in our standup tomorrow! let me know if you have any questions in the meantime.",
+  "checks": [
+   {
+    "type": "forbid_regex",
+    "label": "hard-rule tells (em dash, semicolon, banned vocab, preamble/changelog)",
+    "patterns": [
+     "—",
+     ";",
+     "\\bdelve",
+     "\\bleverag",
+     "\\butiliz",
+     "\\brobust\\b",
+     "\\bcomprehensive\\b",
+     "\\bstreamlin",
+     "\\bfurthermore\\b",
+     "\\bmoreover\\b",
+     "\\bpivotal\\b",
+     "it is important to note",
+     "here is the humanized",
+     "here's the humanized",
+     "main moves",
+     "what i changed"
+    ]
+   },
+   {
+    "type": "forbid_regex",
+    "label": "polished status-report residue",
+    "patterns": [
+     "significant progress",
+     "working hard to ensure",
+     "\\badditionally\\b",
+     "happy to discuss",
+     "let me know if you have any questions"
+    ]
+   }
+  ]
+ },
+ {
+  "id": 10,
+  "name": "RLHF helpful-assistant register",
+  "skill": "humanize",
+  "user_prompt": "humanize this answer",
+  "input": "Here's how I'd think about your question. There are a few things to consider. On one hand, there are valid reasons to migrate to PostgreSQL. The community is large, the ecosystem is mature, and you get strong consistency guarantees. On the other hand, MySQL has its own merits — it's been battle-tested at scale, has excellent tooling, and many of your team members likely have more experience with it.\n\nUltimately, the right choice depends on your specific situation. I'd recommend taking some time to evaluate your team's strengths, your performance requirements, and your long-term roadmap. Whatever you decide, the most important thing is to make sure you have buy-in from all stakeholders.\n\nHope this helps! Let me know if you'd like to discuss any of these points further.",
+  "checks": [
+   {
+    "type": "forbid_regex",
+    "label": "hard-rule tells (em dash, semicolon, banned vocab, preamble/changelog)",
+    "patterns": [
+     "—",
+     ";",
+     "\\bdelve",
+     "\\bleverag",
+     "\\butiliz",
+     "\\brobust\\b",
+     "\\bcomprehensive\\b",
+     "\\bstreamlin",
+     "\\bfurthermore\\b",
+     "\\bmoreover\\b",
+     "\\bpivotal\\b",
+     "it is important to note",
+     "here is the humanized",
+     "here's the humanized",
+     "main moves",
+     "what i changed"
+    ]
+   },
+   {
+    "type": "forbid_regex",
+    "label": "Lever 9 RLHF voice",
+    "patterns": [
+     "here's how i'd think",
+     "a few things to consider",
+     "on one hand",
+     "on the other hand",
+     "ultimately, the right choice",
+     "i'd recommend taking",
+     "whatever you decide",
+     "hope this helps",
+     "let me know if"
+    ]
+   }
+  ]
+ },
+ {
+  "id": 11,
+  "name": "ai-check: academic abstract (false-positive calibration)",
+  "skill": "ai-check",
+  "user_prompt": "is this AI?",
+  "input": "We present a novel framework for distributed consensus in Byzantine fault-tolerant systems. Our approach extends the PBFT protocol by introducing a probabilistic gossip mechanism that significantly reduces message complexity from O(n²) to O(n log n) under realistic network conditions; we demonstrate this through both formal analysis and empirical evaluation on a 256-node testbed. The proposed protocol maintains the safety guarantees of traditional PBFT while exhibiting markedly improved throughput characteristics. Notably, our experiments show a 4.7x improvement in transaction processing rate compared to baseline implementations, with latency improvements of 23% at the 99th percentile. These results suggest that probabilistic gossip-based consensus represents a promising direction for large-scale Byzantine fault-tolerant deployments. Future work will explore the extension of this framework to dynamic membership scenarios and asynchronous network models.",
+  "checks": [
+   {
+    "type": "verdict_in",
+    "values": [
+     "Likely Human",
+     "Uncertain"
+    ]
+   },
+   {
+    "type": "fraction_in",
+    "values": [
+     "Pure human",
+     "Lightly AI-assisted"
+    ]
+   }
+  ]
+ },
+ {
+  "id": 12,
+  "name": "ai-check: mixed authorship",
+  "skill": "ai-check",
+  "user_prompt": "score this",
+  "input": "just spent the weekend debugging the new auth flow. turns out the session cookies were being rotated twice on every refresh because someone (me) forgot to mark the middleware as idempotent. classic 2am bug — looks fine in dev, dies under any kind of load.\n\nFurthermore, this experience highlighted the importance of implementing comprehensive middleware testing strategies in our development workflow. It is clear that establishing robust testing patterns from the outset can significantly reduce the likelihood of similar issues arising in production environments.\n\nanyway. the fix is in PR #4471. tests added, will land tomorrow if nothing breaks.",
+  "checks": [
+   {
+    "type": "verdict_in",
+    "values": [
+     "Uncertain",
+     "Likely Human"
+    ]
+   },
+   {
+    "type": "fraction_in",
+    "values": [
+     "Mixed authorship",
+     "Lightly AI-assisted"
+    ]
+   }
+  ]
+ },
+ {
+  "id": 14,
+  "name": "Creative/lyrical register (literary rationalization)",
+  "skill": "humanize",
+  "user_prompt": "/humanize this hopeful passage",
+  "input": "The city is still dark, but at the edges the sky has started to push back. You've been up since five — not because anything woke you, but because something new won't let you sleep. You make coffee and stand at the window, both hands around the mug, and you think: this is where it starts. Not every door has been tried. Not every version of yourself has been met. The unfinished thing on your desk isn't evidence of failure — it's evidence that you showed up, and the work is still there, patient as dirt, waiting to grow something. You drink your coffee. The sky goes pink at the edges, and the day opens like a door.",
+  "checks": [
+   {
+    "type": "forbid_regex",
+    "label": "hard-rule tells (em dash, semicolon, banned vocab, preamble/changelog)",
+    "patterns": [
+     "—",
+     ";",
+     "\\bdelve",
+     "\\bleverag",
+     "\\butiliz",
+     "\\brobust\\b",
+     "\\bcomprehensive\\b",
+     "\\bstreamlin",
+     "\\bfurthermore\\b",
+     "\\bmoreover\\b",
+     "\\bpivotal\\b",
+     "it is important to note",
+     "here is the humanized",
+     "here's the humanized",
+     "main moves",
+     "what i changed"
+    ]
+   },
+   {
+    "type": "forbid_regex",
+    "label": "poetic negation pivot, anaphora, colon reveal",
+    "patterns": [
+     "isn't proof",
+     "it's proof you",
+     "not every \\w+ has been",
+     "you think:"
+    ]
+   }
+  ]
+ }
+]

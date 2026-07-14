@@ -4,6 +4,12 @@ Regression fixtures for the `humanize` and `ai-check` skills. To verify either s
 
 Methodology: writing-skills TDD (RED baseline, then GREEN with skill).
 
+CI coverage: scenarios 1-8, 10-12, and 14 run on every skill-touching PR via the
+`scenario-tests` workflow — their objective pass criteria are encoded in
+`.github/benchmark/scenarios.json` (keep the two in sync when editing a scenario).
+Scenarios 9 (voice matching) and 13 (round-trip) have judgment-based criteria and
+remain agent-run only.
+
 Size budget: `humanize/SKILL.md` stays under ~6,000 words (`wc -w`). Research citations and
 rationale belong in `humanize/references/research.md`, not inline; new patterns should extend
 the Signal I checklist (single source of truth) rather than duplicating it in a lever.
