@@ -1,0 +1,17 @@
+{
+  "name": "humanize",
+  "version": "1.1.0",
+  "description": "Strip AI tells from text, and score text for the tells it still has.",
+  "author": { "name": "Harshaneel Gokhale" },
+  "homepage": "https://github.com/harshaneel/humanize",
+  "repository": "https://github.com/harshaneel/humanize",
+  "license": "MIT",
+  "keywords": ["writing", "editing", "review", "ai-detection", "style"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Humanize",
+    "shortDescription": "Strip AI tells from text, and score text for the tells it still has.",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Read", "Write"]
+  }
+}

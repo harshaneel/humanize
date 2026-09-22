@@ -117,7 +117,7 @@ def main():
         MARKER,
         f"## Humanize skill benchmark — {'PASS ✅' if passed else 'FAIL ❌'}",
         "",
-        f"{len(ids)} fixed AI-flavored inputs humanized with the PR's `humanize/SKILL.md` "
+        f"{len(ids)} fixed AI-flavored inputs humanized with the PR's `plugins/humanize/skills/humanize/SKILL.md` "
         f"(executor: {args.executor_label}{resolved_note}) and scored against the raw "
         "inputs as baseline.",
         "",

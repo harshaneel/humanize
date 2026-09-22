@@ -1,0 +1,24 @@
+{
+  "name": "humanize",
+  "owner": {
+    "name": "Harshaneel Gokhale",
+    "email": "harshaneel.gokhale@gmail.com"
+  },
+  "metadata": {
+    "description": "Skills for writing that does not read as AI-generated."
+  },
+  "plugins": [
+    {
+      "name": "humanize",
+      "source": "./plugins/humanize",
+      "description": "Strip AI tells from text, and score text for the tells it still has.",
+      "version": "1.1.0",
+      "author": { "name": "Harshaneel Gokhale" },
+      "homepage": "https://github.com/harshaneel/humanize",
+      "repository": "https://github.com/harshaneel/humanize",
+      "license": "MIT",
+      "keywords": ["writing", "editing", "review", "ai-detection", "style"],
+      "category": "productivity"
+    }
+  ]
+}

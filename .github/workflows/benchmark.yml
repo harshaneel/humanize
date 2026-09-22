@@ -4,15 +4,15 @@ on:
   # Same-repo PRs: workflow and code run from the PR branch (trusted).
   pull_request:
     paths:
-      - "humanize/SKILL.md"
+      - "plugins/humanize/skills/humanize/SKILL.md"
       - ".github/benchmark/**"
       - ".github/workflows/benchmark.yml"
   # Fork PRs: workflow and ALL code run from the base branch; only the fork's
-  # humanize/SKILL.md is fetched, as prompt data. Fork code never executes here.
+  # plugins/humanize/skills/humanize/SKILL.md is fetched, as prompt data. Fork code never executes here.
   pull_request_target:
     types: [opened, synchronize, reopened, labeled]
     paths:
-      - "humanize/SKILL.md"
+      - "plugins/humanize/skills/humanize/SKILL.md"
   workflow_dispatch:
 
 permissions:
@@ -54,8 +54,8 @@ jobs:
         if: github.event_name == 'pull_request_target'
         run: |
           git fetch origin "pull/${{ github.event.pull_request.number }}/head"
-          git checkout FETCH_HEAD -- humanize/SKILL.md
-          echo "Benchmarking fork skill: $(wc -w < humanize/SKILL.md) words"
+          git checkout FETCH_HEAD -- plugins/humanize/skills/humanize/SKILL.md
+          echo "Benchmarking fork skill: $(wc -w < plugins/humanize/skills/humanize/SKILL.md) words"
 
       - uses: actions/setup-python@v5
         with:
@@ -77,7 +77,7 @@ jobs:
         env:
           LLM_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          python $BENCH/humanize_batch.py --skill humanize/SKILL.md \
+          python $BENCH/humanize_batch.py --skill plugins/humanize/skills/humanize/SKILL.md \
             --inputs $BENCH/inputs.json --output /tmp/outputs.json \
             --base-url "$EXECUTOR_BASE_URL" --model "$EXECUTOR_MODEL"
 

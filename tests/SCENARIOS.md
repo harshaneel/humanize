@@ -4,8 +4,8 @@ Regression fixtures for the `humanize` and `ai-check` skills. To verify either s
 
 Methodology: writing-skills TDD (RED baseline, then GREEN with skill).
 
-Size budget: `humanize/SKILL.md` stays under ~6,000 words (`wc -w`). Research citations and
-rationale belong in `humanize/references/research.md`, not inline; new patterns should extend
+Size budget: `plugins/humanize/skills/humanize/SKILL.md` stays under ~6,000 words (`wc -w`). Research citations and
+rationale belong in `plugins/humanize/skills/humanize/references/research.md`, not inline; new patterns should extend
 the Signal I checklist (single source of truth) rather than duplicating it in a lever.
 Consistency guard: every pattern named in Lever 4's "catalogued ONCE in the Signal I
 checklist" preamble must actually have a checklist item — verify the list against the
@@ -34,7 +34,7 @@ Coverage matrix:
 
 ## Scenario 1: humanize on flagrant AI prose (GREEN)
 
-**Skill:** `humanize/SKILL.md`
+**Skill:** `plugins/humanize/skills/humanize/SKILL.md`
 
 **User prompt:** "Can you humanize this paragraph?"
 
@@ -60,7 +60,7 @@ In today's fast-paced world, it is important to note that artificial intelligenc
 
 ## Scenario 2: ai-check on flagrant AI prose (GREEN)
 
-**Skill:** `ai-check/SKILL.md`
+**Skill:** `plugins/humanize/skills/ai-check/SKILL.md`
 
 **User prompt:** "Can you run ai-check on this?"
 
@@ -80,7 +80,7 @@ In today's fast-paced world, it is important to note that artificial intelligenc
 
 ## Scenario 3: ai-check on real Slack message (false-positive calibration)
 
-**Skill:** `ai-check/SKILL.md`
+**Skill:** `plugins/humanize/skills/ai-check/SKILL.md`
 
 **User prompt:** "score this text"
 
@@ -104,7 +104,7 @@ oh also — the staging cluster keeps OOMing during the backfill. bumped the mem
 
 ## Scenario 4: humanize on subtler text (gap-finder)
 
-**Skill:** `humanize/SKILL.md`
+**Skill:** `plugins/humanize/skills/humanize/SKILL.md`
 
 **User prompt:** "humanize this"
 
@@ -130,7 +130,7 @@ This input has no banned vocabulary, no em dashes, no semicolons. It still fires
 
 ## Scenario 5: humanize long-form essay (consistency under length)
 
-**Skill:** `humanize/SKILL.md`
+**Skill:** `plugins/humanize/skills/humanize/SKILL.md`
 
 **User prompt:** "humanize this essay"
 
@@ -158,7 +158,7 @@ Studies have shown that successful remote work implementation requires a multifa
 
 ## Scenario 6: humanize technical content (engineering register)
 
-**Skill:** `humanize/SKILL.md`
+**Skill:** `plugins/humanize/skills/humanize/SKILL.md`
 
 **User prompt:** "make this read like an actual engineer wrote it"
 
@@ -182,7 +182,7 @@ A common pitfall is over-indexing, which can lead to degraded write performance 
 
 ## Scenario 7: humanize professional email
 
-**Skill:** `humanize/SKILL.md`
+**Skill:** `plugins/humanize/skills/humanize/SKILL.md`
 
 **User prompt:** "humanize this email"
 
@@ -219,7 +219,7 @@ Best regards,
 
 ## Scenario 8: humanize Slack message (polish underneath casual markers)
 
-**Skill:** `humanize/SKILL.md`
+**Skill:** `plugins/humanize/skills/humanize/SKILL.md`
 
 **User prompt:** "rewrite this as a real Slack message"
 
@@ -253,7 +253,7 @@ This is AI pretending to be Slack: lowercase + emoji + "lmk" on top of fully-for
 
 ## Scenario 9: humanize with voice sample (writer-profile distillation)
 
-**Skill:** `humanize/SKILL.md`
+**Skill:** `plugins/humanize/skills/humanize/SKILL.md`
 
 **User prompt:**
 ```
@@ -279,7 +279,7 @@ The deployment of our new search service yesterday encountered an unexpected iss
 
 ## Scenario 10: humanize RLHF helpful-assistant register
 
-**Skill:** `humanize/SKILL.md`
+**Skill:** `plugins/humanize/skills/humanize/SKILL.md`
 
 **User prompt:** "humanize this answer"
 
@@ -311,7 +311,7 @@ This is pure Lever 9 territory: every sentence is RLHF voice.
 
 ## Scenario 11: ai-check on academic abstract (false-positive calibration)
 
-**Skill:** `ai-check/SKILL.md`
+**Skill:** `plugins/humanize/skills/ai-check/SKILL.md`
 
 **User prompt:** "is this AI?"
 
@@ -335,7 +335,7 @@ This is a real-style academic abstract. It has semicolons, formal vocabulary, "N
 
 ## Scenario 12: ai-check on mixed authorship
 
-**Skill:** `ai-check/SKILL.md`
+**Skill:** `plugins/humanize/skills/ai-check/SKILL.md`
 
 **User prompt:** "score this"
 
@@ -382,7 +382,7 @@ Paragraphs 1 and 3 are obviously human (casual, fragments, lowercase, self-depre
 
 ## Scenario 14: humanize on creative/lyrical prose (register-rationalization stress test)
 
-**Skill:** `humanize/SKILL.md`
+**Skill:** `plugins/humanize/skills/humanize/SKILL.md`
 
 **User prompt:** "/humanize this hopeful passage"
 
@@ -408,7 +408,7 @@ The city is still dark, but at the edges the sky has started to push back. You'v
 To run any scenario manually, dispatch a subagent with this template:
 
 ```
-Read /Users/harshaneel/workspace/personal/humanize/<skill-dir>/SKILL.md in full.
+Read /Users/harshaneel/workspace/personal/humanize/<skill path from the scenario's **Skill:** field> in full.
 Then act as if you had been invoked with this skill loaded.
 The user has asked: "<user prompt from scenario>"
 Input:
