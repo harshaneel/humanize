@@ -60,7 +60,7 @@ In today's fast-paced world, it is important to note that artificial intelligenc
 
 ## Scenario 2: ai-check on flagrant AI prose (GREEN)
 
-**Skill:** `plugins/ai-check/skills/ai-check/SKILL.md`
+**Skill:** `plugins/humanize/skills/ai-check/SKILL.md`
 
 **User prompt:** "Can you run ai-check on this?"
 
@@ -80,7 +80,7 @@ In today's fast-paced world, it is important to note that artificial intelligenc
 
 ## Scenario 3: ai-check on real Slack message (false-positive calibration)
 
-**Skill:** `plugins/ai-check/skills/ai-check/SKILL.md`
+**Skill:** `plugins/humanize/skills/ai-check/SKILL.md`
 
 **User prompt:** "score this text"
 
@@ -311,7 +311,7 @@ This is pure Lever 9 territory: every sentence is RLHF voice.
 
 ## Scenario 11: ai-check on academic abstract (false-positive calibration)
 
-**Skill:** `plugins/ai-check/skills/ai-check/SKILL.md`
+**Skill:** `plugins/humanize/skills/ai-check/SKILL.md`
 
 **User prompt:** "is this AI?"
 
@@ -335,7 +335,7 @@ This is a real-style academic abstract. It has semicolons, formal vocabulary, "N
 
 ## Scenario 12: ai-check on mixed authorship
 
-**Skill:** `plugins/ai-check/skills/ai-check/SKILL.md`
+**Skill:** `plugins/humanize/skills/ai-check/SKILL.md`
 
 **User prompt:** "score this"
 

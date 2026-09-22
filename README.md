@@ -61,13 +61,14 @@ other agent reads the skills from disk, which `install.sh` sets up.
 
 ### Claude Code
 
-This repo is a Claude Code plugin marketplace. Add it once, then install either skill:
+This repo is a Claude Code plugin marketplace. Add it once, then install it:
 
 ```bash
 claude plugin marketplace add harshaneel/humanize
 claude plugin install humanize@humanize
-claude plugin install ai-check@humanize
 ```
+
+That one plugin carries both skills.
 
 Restart Claude Code and both skills are live. Update later with
 `claude plugin update humanize`.
@@ -87,7 +88,6 @@ Codex reads the same repo as a plugin marketplace:
 ```bash
 codex plugin marketplace add harshaneel/humanize
 codex plugin add humanize@humanize
-codex plugin add ai-check@humanize
 ```
 
 Refresh the snapshot later with `codex plugin marketplace upgrade`.
@@ -117,7 +117,7 @@ ChatGPT desktop and several OpenAI agent harnesses read from `~/.agents/skills/`
 ```bash
 git clone https://github.com/harshaneel/humanize.git
 mkdir -p ~/.agents/skills
-cp -R humanize/plugins/humanize/skills/humanize humanize/plugins/ai-check/skills/ai-check ~/.agents/skills/
+cp -R humanize/plugins/humanize/skills/humanize humanize/plugins/humanize/skills/ai-check ~/.agents/skills/
 ```
 
 Or `cd humanize && ./install.sh chatgpt` to use the install script.
@@ -127,7 +127,7 @@ Or `cd humanize && ./install.sh chatgpt` to use the install script.
 ```bash
 git clone https://github.com/harshaneel/humanize.git
 mkdir -p ~/.config/opencode/skills
-cp -R humanize/plugins/humanize/skills/humanize humanize/plugins/ai-check/skills/ai-check ~/.config/opencode/skills/
+cp -R humanize/plugins/humanize/skills/humanize humanize/plugins/humanize/skills/ai-check ~/.config/opencode/skills/
 ```
 
 > **Note:** OpenCode also scans `~/.claude/skills/` for compatibility, so `./install.sh` covers both tools. Cloning the repo straight into `~/.claude/skills/` no longer works, because the skills sit under `plugins/`.
@@ -138,12 +138,12 @@ The web and desktop apps don't read from disk. Upload through the UI instead:
 
 1. Open **Settings → Capabilities → Skills**.
 2. Click **Create skill** and upload [`plugins/humanize/skills/humanize/SKILL.md`](plugins/humanize/skills/humanize/SKILL.md).
-3. Repeat with [`plugins/ai-check/skills/ai-check/SKILL.md`](plugins/ai-check/skills/ai-check/SKILL.md).
+3. Repeat with [`plugins/humanize/skills/ai-check/SKILL.md`](plugins/humanize/skills/ai-check/SKILL.md).
 4. Toggle each skill on in conversations where you want it active.
 
 ### Any other chat agent (ChatGPT, Gemini, Cursor, Aider, Cline)
 
-No install needed. Open [`plugins/humanize/skills/humanize/SKILL.md`](plugins/humanize/skills/humanize/SKILL.md), copy the raw contents, and paste into a new conversation prefaced with: *"Use these instructions whenever I ask you to humanize text."* Same for [`plugins/ai-check/skills/ai-check/SKILL.md`](plugins/ai-check/skills/ai-check/SKILL.md).
+No install needed. Open [`plugins/humanize/skills/humanize/SKILL.md`](plugins/humanize/skills/humanize/SKILL.md), copy the raw contents, and paste into a new conversation prefaced with: *"Use these instructions whenever I ask you to humanize text."* Same for [`plugins/humanize/skills/ai-check/SKILL.md`](plugins/humanize/skills/ai-check/SKILL.md).
 
 ---
 
@@ -168,7 +168,7 @@ Please humanize this text: [your text]
 ### AI-check
 
 ```
-/ai-check:ai-check
+/humanize:ai-check
 
 [paste your text here]
 ```
@@ -596,7 +596,7 @@ The `humanize` skill catalogs these in implementation detail under "Advanced tec
 Installed as a plugin:
 
 ```bash
-claude plugin update humanize        # and ai-check
+claude plugin update humanize
 codex plugin marketplace upgrade
 codex plugin add humanize@humanize   # refreshes the cached copy
 ```
@@ -614,6 +614,13 @@ git pull
 
 This release moved the skills under `plugins/`. If you installed before that, re-run `./install.sh` (or `./install.sh all`) once after pulling, otherwise your symlinks point at the old locations and the skills silently stop loading.
 
+If you installed an earlier build that shipped `ai-check` as its own plugin, remove it. Both skills now come from the one `humanize` plugin:
+
+```bash
+claude plugin uninstall ai-check@humanize
+codex plugin remove ai-check@humanize
+```
+
 After that, symlink installs pick up updates immediately. If you used `--copy`, re-run `./install.sh` to refresh.
 
 ## Uninstalling
@@ -622,10 +629,8 @@ Installed as a plugin:
 
 ```bash
 claude plugin uninstall humanize@humanize
-claude plugin uninstall ai-check@humanize
 # or for codex
 codex plugin remove humanize@humanize
-codex plugin remove ai-check@humanize
 ```
 
 Installed from a clone:
@@ -640,16 +645,16 @@ rm ~/.codex/skills/humanize ~/.codex/skills/ai-check
 
 PRs welcome, especially for:
 
-- New AI tells discovered in the wild (add to `plugins/ai-check/skills/ai-check/SKILL.md` Signal I)
+- New AI tells discovered in the wild (add to `plugins/humanize/skills/ai-check/SKILL.md` Signal I)
 - New humanization patterns that survive 2025-2026 detectors
 - Test scenarios that exercise edge cases (add to `tests/SCENARIOS.md`)
 - Research citations that update or contradict the existing claims (open an issue first if it requires structural changes)
 
 Before opening a PR, run the regression scenarios in `tests/SCENARIOS.md` manually and document the result.
 
-Changing a skill also means bumping its version in four files, otherwise plugin users never see
-the change: `.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`,
-`plugins/<skill>/.claude-plugin/plugin.json` and `plugins/<skill>/.codex-plugin/plugin.json`.
+Changing a skill also means bumping the plugin version in four files, otherwise plugin users never
+see the change: `.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`,
+`plugins/humanize/.claude-plugin/plugin.json` and `plugins/humanize/.codex-plugin/plugin.json`.
 
 ## License
 

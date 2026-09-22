@@ -11,25 +11,13 @@
     {
       "name": "humanize",
       "source": "./plugins/humanize",
-      "description": "Rewrite text to strip AI tells and restore a human voice.",
-      "version": "1.0.0",
+      "description": "Strip AI tells from text, and score text for the tells it still has.",
+      "version": "1.1.0",
       "author": { "name": "Harshaneel Gokhale" },
       "homepage": "https://github.com/harshaneel/humanize",
       "repository": "https://github.com/harshaneel/humanize",
       "license": "MIT",
-      "keywords": ["writing", "editing", "ai-detection", "style"],
-      "category": "productivity"
-    },
-    {
-      "name": "ai-check",
-      "source": "./plugins/ai-check",
-      "description": "Score text for AI-writing signals and explain what gives it away.",
-      "version": "1.0.0",
-      "author": { "name": "Harshaneel Gokhale" },
-      "homepage": "https://github.com/harshaneel/humanize",
-      "repository": "https://github.com/harshaneel/humanize",
-      "license": "MIT",
-      "keywords": ["writing", "review", "ai-detection", "forensics"],
+      "keywords": ["writing", "editing", "review", "ai-detection", "style"],
       "category": "productivity"
     }
   ]
