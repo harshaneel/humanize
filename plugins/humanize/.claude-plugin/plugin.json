@@ -1,0 +1,10 @@
+{
+  "name": "humanize",
+  "version": "1.0.0",
+  "description": "Rewrite text to strip AI tells and restore a human voice.",
+  "author": { "name": "Harshaneel Gokhale" },
+  "homepage": "https://github.com/harshaneel/humanize",
+  "repository": "https://github.com/harshaneel/humanize",
+  "license": "MIT",
+  "keywords": ["writing", "editing", "ai-detection", "style"]
+}

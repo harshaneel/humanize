@@ -55,7 +55,8 @@ install_into() {
   echo "Installing skills to $dest (mode: $MODE)"
 
   for skill in "${SKILLS[@]}"; do
-    local src="$REPO_DIR/$skill"
+    local src="$REPO_DIR/plugins/$skill/skills/$skill"
+    [ -d "$src" ] || src="$REPO_DIR/$skill"
     local dst="$dest/$skill"
 
     if [ ! -d "$src" ]; then

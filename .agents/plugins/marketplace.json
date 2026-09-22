@@ -1,0 +1,32 @@
+{
+  "name": "humanize",
+  "interface": {
+    "displayName": "Humanize"
+  },
+  "plugins": [
+    {
+      "name": "humanize",
+      "version": "1.0.0",
+      "source": {
+        "source": "local",
+        "path": "./plugins/humanize"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "ai-check",
+      "version": "1.0.0",
+      "source": {
+        "source": "local",
+        "path": "./plugins/ai-check"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
