@@ -318,6 +318,13 @@ Naming what something isn't before saying what it is. "It's not self-reported, i
 merit-based." "Reasoning, not just behavior." All three forms are the same pattern.
 Quote the diminishment.
 
+**"X rather than Y" / "X, not Y" contrast framing** (severity: moderate)
+The diminishment pattern with the positive half first. "I measured both rather than
+acting on the summary." "The brand partial has two render sites, not one." Each defines
+the claim by the option it rejects, and each reads cleaner with the contrast cut: "I
+measured both." "The brand partial has two render sites." One per 500 words is ordinary
+prose. Quote each instance and report the count.
+
 **Setup sentences without colons** (severity: moderate)
 Announcement sentences of the form "What [verb phrase] was [the revelation]" — the colon
 is not the tell, the announcement structure is. All forms fire:

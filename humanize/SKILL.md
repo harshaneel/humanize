@@ -32,10 +32,14 @@ clean" as false by default.
 4. **Banned vocabulary** (full list at end of this skill). Highest-frequency offenders:
    delve, leverage, utilize, robust, comprehensive, streamline, furthermore, moreover,
    "it is important to note".
-5. **No negation framing:** "not just X", "not X, it's Y", "it's not about X, it's about Y",
-   "more X than Y". Say what the thing IS. Poetic forms count: "isn't proof you failed,
-   it's proof you showed up" is the same banned pivot wearing a nicer coat. (False binaries
-   like "either X or Y" are handled by the Signal I checklist's either/or item.)
+5. **No negation or contrast framing:** "not just X", "not X, it's Y", "it's not about X,
+   it's about Y", "more X than Y", "X rather than Y", and the reordered form "X, not Y".
+   Say what the thing IS. Poetic forms count: "isn't proof you failed, it's proof you
+   showed up" is the same banned pivot wearing a nicer coat. "Rather than" is the one that
+   survives every other rule: it reads as precision, and it is the same move of defining a
+   thing by what it is not. "I swept the whole class rather than the two flagged instances"
+   becomes "I swept the whole class." (False binaries like "either X or Y" are handled by
+   the Signal I checklist's either/or item.)
 6. **Output shape:** the rewritten text only. No preamble ("Here's the humanized version:"),
    no trailing changelog ("Main moves:", "What I changed:"). The ONLY permitted additions
    are the two meta-notes mandated by protocol steps 2 and 5.6, appended after the rewrite.
@@ -329,6 +333,7 @@ When given text to humanize:
    - [ ] **Banned vocabulary.** Scan against the master list (end of this skill), quote each hit. Eyeball first: delve, leverage (verb), utilize, robust, comprehensive, furthermore, moreover, "it is important to note".
    - [ ] **Comparative framing.** Scan for "more ... than" and "feels like ... not", quote each match. Describe the thing directly.
    - [ ] **Diminishment.** Scan for "not just", "not X, it's", "not X but", quote each match. State what it IS.
+   - [ ] **Contrast framing.** Scan for "rather than" and for ", not " (the reordered "X, not Y"), quote each match. Keep the positive half and drop the contrast.
 
    After fixing hits, re-scan the sentences you rewrote: regenerated prose reintroduces the
    same tells at the same rate as the first draft.
@@ -552,3 +557,6 @@ i hope this helps, looking forward to connecting soon
 
 **Binary framing:**
 whether X or Y (as a clean binary framing opener)
+
+**Contrast framing:**
+X rather than Y, X, not Y (the reordered negation), instead of X (when it only names the rejected option)
